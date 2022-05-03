@@ -23,12 +23,12 @@ nav_exclude:                                            # The following paths ar
 ### Author Info ###
 author:
   name              : L-o-g-a-n
-  image             : ../images/profile.jpg
+  image             : https://raw.githubusercontent.com/L-o-g-a-n/L-o-g-a-n.github.io/master/.github/images/profile.png
   behance           : your_username
 # dribbble          : your_username
   email             : xy.logandev@gmail.com
   facebook          : your_username
-  github            : https://github.com/L-o-g-a-n
+  github            : L-o-g-a-n
 # gitlab            : your_username
 # instagram         : your_username
 # kaggle            : your_username
