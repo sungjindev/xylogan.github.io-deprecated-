@@ -1,2 +1,2 @@
-# Logan's blog
-깊이를 더 깊게
+# L-o-g-a-n.github.io
+L-o-g-a-n's blog
