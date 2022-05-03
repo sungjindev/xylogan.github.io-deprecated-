@@ -1,9 +1,7 @@
 ### Site Settings ###
-title               : portfolYOU
+title               : Logan
 description         : >-
-                      I turn coffee :coffee: into code,
-                      use tabs over spaces
-                      and never broke production.
+                      Challenging Developer
 baseurl             : ""                     # Change to empty quotes if you are hosting your site at <your-username>.github.io directly
 repository          : L-o-g-a-n/L-o-g-a-n.github.io     # Change to <your-username>/<your-username>.github.io (or remove it if you don't need remote projects)
 remote_theme        : YoussefRaafatNasry/portfolYOU
@@ -25,12 +23,12 @@ nav_exclude:                                            # The following paths ar
 ### Author Info ###
 author:
   name              : L-o-g-a-n
-  image             : https://i.imgur.com/uyDNQnn.jpg
+  image             : ../images/profile.jpg
   behance           : your_username
 # dribbble          : your_username
   email             : xy.logandev@gmail.com
   facebook          : your_username
-  github            : your_username
+  github            : https://github.com/L-o-g-a-n
 # gitlab            : your_username
 # instagram         : your_username
 # kaggle            : your_username
