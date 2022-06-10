@@ -56,4 +56,4 @@ gcloud compute ssh [연결할 인스턴스 이름] --zone us-central1-f
 다음 포스팅에서는 오늘 Cloud shell에서 사용한 gcloud command line tool에 대해 조금 더 깊이있게 다뤄볼 예정이다.
 
 ## References
-> * https://cloud.google.com/
+> https://cloud.google.com/  

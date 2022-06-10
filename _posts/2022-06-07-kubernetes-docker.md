@@ -34,6 +34,6 @@ sudo systemctl restart containerd
 > 위 코드를 통해 업데이트 시켜주면 Kubernetes의 컨테이너 런타임 변경이 모두 완료된다.
 
 ## References
-> * https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/
-* https://kubernetes.io/blog/2022/02/17/dockershim-faq/
-* https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd
+> https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/  
+https://kubernetes.io/blog/2022/02/17/dockershim-faq/  
+https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd  
