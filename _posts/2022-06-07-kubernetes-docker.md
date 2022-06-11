@@ -1,6 +1,6 @@
 ---
 title: Kubernetes의 Docker 지원 중단  
-tags: [Kubernetes, issue]
+tags: [Kubernetes, Issue]
 style: fill
 color: light
 description: Kubernetes의 Docker 지원 중단, 득인가 실인가?
