@@ -36,7 +36,7 @@ tail_includes:
     <div class="mt-3 mb-3">
       <img src="{{ page.image.path }}" class="preview-img {{ bg | strip }}"
         alt="{{ page.image.alt | default: "Preview Image" }}"
-
+        style="border:1px solid #eaeaea; border-radius: 7px; padding: 0px;"
       {% if page.image.width %}
         width="{{ page.image.width }}"
       {% elsif page.image.w %}
