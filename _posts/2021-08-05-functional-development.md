@@ -175,6 +175,6 @@ vector<int> calcDistributes(vector<int> answer)
   return answer;
 }
 ```
-제가 기존에 함수화 시켜놨던 모듈들은 그대로 유지시키고 싶어서, 다른 사람 풀이1에 비해서 비효율적이었던 calcDistributes() 메소드 부분을 위처럼 수정해주었습니다.
+제가 기존에 함수화 시켜놨던 모듈들은 그대로 유지시키고 싶어서, 다른 사람 풀이1에 비해서 비효율적이었던 calcDistributes() 메소드 부분을 위처럼 수정해주었습니다.  
 
 
