@@ -1,6 +1,6 @@
 ---
-title: 고득점 Kit - 해시 - Level1 - 완주하지 못한 선수
-categories: [Algorithm, Programmers]
+title: 고득점 Kit_ 해시 - Level1 - 완주하지 못한 선수
+categories: [Computer science, Algorithm]
 tags: [Hash, Level1, Programmers, 고득점, 알고리즘, 완주하지 못한 선수, 코딩 테스트, 프로그래머스, 해시]
 ---
 

@@ -1,7 +1,7 @@
 ---
-title: 고득점 Kit - 스택/큐 - Level2 - 기능개발
+title: 고득점 Kit_ 스택/큐 - Level2 - 기능개발
 categories: [Algorithm, Programmers]
-tags: [Level2, Programmers, queue, stack, 고득점, 기능개발, 스택, 알고리즘, 코딩테스트, 큐, 프로그래머스]
+tags: [Level2, Programmers, queue, stack, 고득점, 기능개발, 스택, 알고리즘, 코딩 테스트, 큐, 프로그래머스]
 ---
 
 **!본 포스팅은 프로그래머스 코딩테스트 고득점 Kit - [기능개발](https://programmers.co.kr/learn/courses/30/lessons/42586) 풀이입니다.**
