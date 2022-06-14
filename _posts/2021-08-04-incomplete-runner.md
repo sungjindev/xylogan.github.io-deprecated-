@@ -1,7 +1,7 @@
 ---
-title: [고득점] 해시 - Level1 - 완주하지 못한 선수
+title: 고득점 Kit - 해시 - Level1 - 완주하지 못한 선수
 categories: [Algorithm, Programmers]
-tags: [Purdue, K-SW Square]
+tags: [Hash, Level1, Programmers, 고득점, 알고리즘, 완주하지 못한 선수, 코딩 테스트, 프로그래머스, 해시]
 ---
 
 **!본 포스팅은 프로그래머스 코딩테스트 고득점 Kit - [완주하지 못한 선수](https://programmers.co.kr/learn/courses/30/lessons/42576) 풀이입니다.**
