@@ -6,7 +6,7 @@ tags: [Hash, Level1, Programmers, 고득점, 알고리즘, 완주하지 못한 �
 
 **!본 포스팅은 프로그래머스 코딩테스트 고득점 Kit - [완주하지 못한 선수](https://programmers.co.kr/learn/courses/30/lessons/42576) 풀이입니다.**
 
-# 처음으로 맞춘 풀이
+## 처음으로 맞춘 풀이
 ``` cpp
 #include <string>
 #include <vector>
@@ -42,7 +42,7 @@ Tip! 문제 속 입력 값의 개수를 보고 시간 복잡도를 많이 따지
 `
 
 
-# 다른 사람의 풀이
+## 다른 사람의 풀이
 ``` cpp
 #include <string>
 #include <vector>
@@ -66,7 +66,7 @@ string solution(vector<string> participant, vector<string> completion)
 ```
 - 다른 사람의 풀이 역시 저와 일치하는 풀이법이네요. 정렬을 한 뒤에 비교를 해준 풀이 방식입니다.
 
-# 최적화한 나의 풀이
+## 최적화한 나의 풀이
 - 최적화된 풀이가 처음에 본인이 푼 풀이와 거의 비슷하여 생략합니다. 
 
 

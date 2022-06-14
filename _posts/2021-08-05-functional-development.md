@@ -6,7 +6,7 @@ tags: [Level2, Programmers, queue, stack, 고득점, 기능개발, 스택, 알�
 
 **!본 포스팅은 프로그래머스 코딩테스트 고득점 Kit - [기능개발](https://programmers.co.kr/learn/courses/30/lessons/42586) 풀이입니다.**
 
-# 처음으로 맞춘 풀이
+## 처음으로 맞춘 풀이
 ``` cpp
 #include <string>
 #include <iostream>
@@ -66,7 +66,7 @@ float number = ceil((100.0 - static_cast<float>(progresses[i])) / speeds[i]);
 
 그 후 calcDistributes 메소드에서 위에서 구한 days를 활용하여 각 배포시마다 몇개의 기능이 배포되는지 구할 수 있도록 구현하였습니다. 기본적으로는 days[0]과 days[1]을 비교하면서 count를 늘려주고 배포할 시점이 오면 answer 벡터에 push_back()해주는 방식으로 처리하였습니다.
 
-# 다른 사람의 풀이1
+## 다른 사람의 풀이1
 ``` cpp
 vector<int> solution(vector<int> progresses, vector<int> speeds)
 {
@@ -98,7 +98,7 @@ day = (99 - progresses[i]) / speeds[i] + 1;
 
 사실 위 코드보다 아래의 알고리즘에서 더욱 큰 영감을 받을 수 있었습니다. max_day라는 변수를 통해 이전 탐색까지의 최대 작업 일수를 저장하고 for loop 속에서 max_day와 day를 비교하면서 배포 시점을 정해준 알고리즘입니다. 위 방식대로하면 처음에 짰던 제 코드보다 훨씬 더 짧고 이해하기 쉬운 코드를 구현할 수 있습니다.
 
-# 다른 사람의 풀이2
+## 다른 사람의 풀이2
 ``` cpp
 vector<int> solution(vector<int> progresses, vector<int> speeds)
 {
@@ -135,7 +135,7 @@ vector<int> solution(vector<int> progresses, vector<int> speeds)
 
 위 코드는 또다른 풀이법인데, 스택/큐 문제 유형에 잘 부합하게 큐를 통하여 풀이한 알고리즘입니다. 자료구조를 queue로 짰다는 것 외에는 거의 비슷한 로직이라서 이하 설명은 생략하도록 하겠습니다.
 
-# 최적화한 나의 풀이
+## 최적화한 나의 풀이
 ``` cpp
 vector<int> days;
 vector<int> solution(vector<int> progresses, vector<int> speeds);
