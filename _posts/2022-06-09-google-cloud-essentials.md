@@ -1,7 +1,7 @@
 ---
 title: Google Cloud Platform Essentials
 categories: [Computer engineering, Cloud infrastructure]
-tags: [Cloud infrastructure, Google cloud platform]
+tags: [Cloud infrastructure, Google cloud platform, 인프라, 클라우드, 가상머신, 구글 클라우드 플랫폼]
 ---
 
 이전 포스팅들을 통해 알 수 있듯이, 현재 미국 Purdue 대학교에서 Kubernetes와 LoRa Network를 활용한 연구를 진행중입니다.  

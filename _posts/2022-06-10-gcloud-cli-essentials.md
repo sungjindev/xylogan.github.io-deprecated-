@@ -1,7 +1,7 @@
 ---
 title: gcloud Command-line interface Essentials
 categories: [Computer engineering, Cloud infrastructure]
-tags: [Cloud infrastructure, Google cloud platform]
+tags: [Cloud infrastructure, Google cloud platform, 인프라, 클라우드, 가상머신, 구글 클라우드 플랫폼]
 ---
 
 [Google Cloud Platform Essentials 포스팅](https://l-o-g-a-n.github.io/posts/google-cloud-essentials)에 이어서 이번 포스팅에는 gcloud CLI에서 사용되는 기본적인 Command에 관하여 자세히 다뤄보려고 합니다. gcloud를 처음 접하는 사용자가 읽으면 분명 도움 될 것입니다.
