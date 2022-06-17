@@ -1,7 +1,7 @@
 ---
 title: 고득점 Kit_ 정렬 - Level1 - K번째수
 categories: [Computer science, Algorithm]
-tags: [level1, programmers, sort, K번째수, 정렬, 알고리즘, 코딩 테스트, 프로그래머스]
+tags: [level1, programmers, sort, 고득점, K번째수, 정렬, 알고리즘, 코딩 테스트, 프로그래머스]
 ---
 
 **!본 포스팅은 프로그래머스 코딩테스트 고득점 Kit - [K번째수](https://programmers.co.kr/learn/courses/30/lessons/42748) 풀이입니다.**
