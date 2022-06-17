@@ -79,7 +79,7 @@ gcloud compute instances create [만들 인스턴스 이름] --machine-type n1-s
 위처럼, 환경 변수를 사용하면 스크립트를 조금 더 빠르고 편하게 작성할 수 있습니다.
 
 ## gcloud 명령어 더 둘러보기
-> gcloud tool은 -h(help) flag를 제공합니다. 따라서, 어떠한 gcloud command에도 맨 뒤에 -h를 붙이면 관련 설명을 볼 수 있습니다.
+> gcloud tool은 -h(help) flag를 제공해줍니다. 따라서, 어떠한 gcloud command에도 맨 뒤에 -h를 붙이면 관련 설명을 볼 수 있습니다.
 
 * help flag 사용 예시
 ```
