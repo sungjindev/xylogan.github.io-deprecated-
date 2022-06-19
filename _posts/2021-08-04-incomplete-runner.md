@@ -64,7 +64,7 @@ string solution(vector<string> participant, vector<string> completion)
   //return answer;
 }
 ```
-- 다른 사람의 풀이 역시 저와 일치하는 풀이법이네요. 정렬을 한 뒤에 비교를 해준 풀이 방식입니다.
+- 다른 사람의 풀이 역시 저와 일치하는 풀이법이네요. 정렬을 한 뒤에 비교 해준 풀이 방식입니다.
 
 ## 최적화한 나의 풀이
 - 최적화된 풀이가 처음에 본인이 푼 풀이와 거의 비슷하여 생략합니다. 
