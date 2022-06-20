@@ -1,7 +1,7 @@
 ---
 title: Kubernetes의 Docker 지원 중단  
 categories: [Computer engineering, Cloud infrastructure]
-tags: [cloud infrastructure, kubernetes, docker]
+tags: [cloud infrastructure, kubernetes, docker, 인프라, 클라우드, 쿠버네티스, 도커]
 ---
 
 퍼듀대학교 K-SW Sqaure 프로그램에서, 쿠버네티스에 관한 주제를 가지고 분산 처리 컴퓨팅에 대한 연구를 진행하고 있습니다.  

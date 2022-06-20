@@ -1,7 +1,7 @@
 ---
 title: GKE(Google Kubernetes Engine) Essentials
 categories: [Computer engineering, Cloud infrastructure]
-tags: [cloud infrastructure, google cloud platform, 인프라, 클라우드, 가상머신, 구글 클라우드 플랫폼]
+tags: [cloud infrastructure, google cloud platform, google kubernetes engine, kubernetes, docker, 인프라, 클라우드, 가상머신, 구글 클라우드 플랫폼, 구글 쿠버네티스 엔진, 쿠버네티스, 도커]
 ---
 
 이번 포스팅은 GKE(Google Kubernetes Engine)을 처음 사용해보는 사용자들을 위해 기초적이고 핵심적인 부분만 다뤄보려고 합니다.
@@ -18,7 +18,7 @@ GCP(Google cloud platform)에 대한 지식이 전혀 없다면 이전 포스팅
 이러한 서비스들을 바탕으로 GKE는 Kubernetes cluster를 구성하는데 도움을 주고 이들을 효율적으로 관리하기 위한 다양한 기능들을 제공합니다. 지금부터는 이러한 GKE를 통해 컨테이너 어플리케이션을 어떻게 배포할 수 있는지 알아보도록 하겠습니다.
 
 ## Default compute zone 설정
-> 이전 포스팅을 통해 Zone과 Region의 개념에 대해서 익히 들으셨을 것이라고 생각합니다. 혹시나 이에 대한 이해가 부족하다면, [Google Cloud Platform Essentials 포스팅](https://l-o-g-a-n.github.io/posts/google-cloud-essentials)을 참고하시기 바랍니다. 우리는 앞으로 만들 우리의 Cluster와 그들의 resources가 위치할 디폴트 Zone을 아래와 같이 설정해줄 수 있습니다. 여기서는 us-central1-a Zone을 선택하였습니다.
+> 이전 포스팅을 통해 Zone과 Region의 개념에 대해서 익히 들으셨을 것이라고 생각합니다. 혹시나 이에 대한 이해가 부족하다면, [Google Cloud Platform Essentials 포스팅](https://l-o-g-a-n.github.io/posts/google-cloud-essentials)을 참고하시기 바랍니다. 우리는 앞으로 만들 우리의 Cluster와 그들의 resources가 위치할 디폴트 Zone을 아래와 같이 설정해 줄 수 있습니다. 여기서는 us-central1-a Zone을 선택하였습니다.
 ```
 gcloud config set compute/zone us-central1-a
 ```
@@ -52,12 +52,12 @@ kubeconfig entry generated for my-cluster.
 ```
 
 ## Containerized application 클러스터 배포
-> 이제 클러스터에 본격적으로 application을 배포할 수 있습니다. 우리는 그중에서도 컨테이너화된 어플리케이션을 배포해보려고 합니다.
+> 이제 클러스터에 본격적으로 application을 배포할 수 있습니다. 우리는 그중에서도 컨테이너화된 어플리케이션을 배포해 보려고 합니다.
 아래 예시에서는 Container Registry 내에 존재하는 hello-app이라는 컨테이너 이미지를 배포합니다.  
 그 전에 앞서서, GKE에서는 클러스터의 자원들을 관리하고 생성하기 위해서 아래와 같은 Kubernetes Object를 사용합니다.
 1. Deployment object: web server와 같은 stateless application을 배포하기 위해 사용
 2. Service object: 배포할 application을 위한 규칙과 load banlancing을 정의하기 위해 사용  
-우선, hello-app이라는 컨테이너 이미지로부터 hello-server라는 이름의 deployment object를 아래와 같이 생성해보겠습니다.
+우선, hello-app이라는 컨테이너 이미지로부터 hello-server라는 이름의 deployment object를 아래와 같이 생성해 보겠습니다.
 ```
 kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
 ```
@@ -65,11 +65,11 @@ kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1
 ```
 deployment.apps/hello-server created
 ```
-다음으로 외부 트래픽에 우리의 어플리케이션을 노출시키기 위해 Kubernetes service object를 생성해보겠습니다. 
+다음으로 외부 트래픽에 우리의 어플리케이션을 노출시키기 위해 Kubernetes service object를 생성해 보겠습니다. 
 ```
 kubectl expose deployment hello-server --type=LoadBalancer --port 8080
 ```
-port flag를 통해 컨테이너가 노출될 포트를 지정해주었고, 컨테이너를 위한 Load Balancer를 생성하도록 type flag를 설정해주었습니다. 아래와 같은 결과가 나왔다면 성공입니다.
+port flag를 통해 컨테이너가 노출될 포트를 지정해 주었고, 컨테이너를 위한 Load Balancer를 생성하도록 type flag를 설정해 주었습니다. 아래와 같은 결과가 나왔다면 성공입니다.
 ```
 service/hello-server exposed
 ```
