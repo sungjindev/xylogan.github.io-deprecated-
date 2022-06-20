@@ -49,7 +49,7 @@ tags: [CS, 기술 면접, 스레드, 프로세스, computer science, technical i
 따라서, 멀티 프로세스와 멀티 스레드를 용도와 환경에 맞게 고루 사용하는 것이 중요합니다.
 
 ## References
-> * https://wooody92.github.io/os/%EB%A9%80%ED%8B%B0-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EC%99%80-%EB%A9%80%ED%8B%B0-%EC%8A%A4%EB%A0%88%EB%93%9C/
+> https://wooody92.github.io/os/%EB%A9%80%ED%8B%B0-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EC%99%80-%EB%A9%80%ED%8B%B0-%EC%8A%A4%EB%A0%88%EB%93%9C/
 
 
   

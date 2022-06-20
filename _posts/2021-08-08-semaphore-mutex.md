@@ -27,7 +27,7 @@ tags: [CS, 기술 면접, 세마포어, 뮤텍스, computer science, technical i
 > 뮤텍스(Mutex)는 이진 세마포어(Binary Semaphore)로 세마포어의 일종입니다. 가장 큰 차이점으로는 **뮤텍스는 오직 1개의 프로세스 혹은 스레드만이 공유 자원에 접근**할 수 있고, **세마포어는 지정된 변수의 값만큼 접근**할 수 있습니다. 또한 **세마포어는 운영체제 혹은 커널 단위에서 해당 리소스 변수가 관리되어 현재 공유 자원을 사용 중인 대상 뿐만아니라 다른 프로세스 및 스레드도 잠금 상태를 해제**할 수 있지만 **뮤텍스는 프로세스 단에서 관리되고 해당 변수(Lock)을 가지고 있기 때문에 Lock을 가지고 있는 변수만이 Unlock**을 할 수 있습니다.
 
 ## References
-> * https://jwprogramming.tistory.com/13
-* https://junghyun100.github.io/Semaphore&Mutex/
+> https://jwprogramming.tistory.com/13  
+https://junghyun100.github.io/Semaphore&Mutex/
 
 

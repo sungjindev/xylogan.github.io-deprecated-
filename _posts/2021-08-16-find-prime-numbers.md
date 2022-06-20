@@ -187,5 +187,5 @@ s라는 string은 numbers 값을 가지고 있고 오름차순으로 정렬합�
 최적화한 풀이가 처음에 본인이 푼 풀이와 동일하여서 이하 설명은 생략하도록 하겠습니다.
 
 ## References
-> * https://notepad96.tistory.com/entry/C-%EC%88%9C%EC%97%B4Permutation-nextpermutation
-* https://blockdmask.tistory.com/79
+> https://notepad96.tistory.com/entry/C-%EC%88%9C%EC%97%B4Permutation-nextpermutation  
+https://blockdmask.tistory.com/79

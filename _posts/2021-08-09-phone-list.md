@@ -131,4 +131,4 @@ bool solution(vector<string> phone_book) //unordered_map 해시를 이용한 풀
 최적화한 풀이가 처음에 본인이 푼 풀이와 동일하여서 이하 설명은 생략하도록 하겠습니다.
 
 ## References
-> * https://math-coding.tistory.com/31
+> https://math-coding.tistory.com/31

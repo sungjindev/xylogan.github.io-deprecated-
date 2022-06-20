@@ -129,5 +129,5 @@ string solution(vector<int> numbers)
 많은 추천을 받은 효율적인 알고리즘이 제 로직과 별로 다를 것이 없어서, 바로 위에서 언급했던 예외 케이스에 대한 부분만 조금 더 효율적으로 가다듬어 봤습니다.
 
 ## References
-> * https://blockdmask.tistory.com/334
-* https://itguava.tistory.com/67
+> https://blockdmask.tistory.com/334  
+https://itguava.tistory.com/67

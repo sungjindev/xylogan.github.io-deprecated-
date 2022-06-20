@@ -43,4 +43,4 @@ C 언어에서 malloc()과 같은 메소드를 통해서 할당하고 free()라�
 그러다가 공유해서 쓰는 하나의 메모리 공간을 다 쓰게되면 서로 영역의 침범하게 되는데 그러한 상황을 **Heap overflow 혹은 Stack overflow**라고 부릅니다.
 
 ## References
-> * https://jinshine.github.io/2018/05/17/%EC%BB%B4%ED%93%A8%ED%84%B0%20%EA%B8%B0%EC%B4%88/%EB%A9%94%EB%AA%A8%EB%A6%AC%EA%B5%AC%EC%A1%B0/
+> https://jinshine.github.io/2018/05/17/%EC%BB%B4%ED%93%A8%ED%84%B0%20%EA%B8%B0%EC%B4%88/%EB%A9%94%EB%AA%A8%EB%A6%AC%EA%B5%AC%EC%A1%B0/
