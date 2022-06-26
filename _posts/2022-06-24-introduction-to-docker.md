@@ -97,7 +97,7 @@ node-app       0.1      f166cd2a9f10    25 seconds ago     656.2 MB
 node           lts      5a767079e3df    15 hours ago       656.2 MB
 hello-world    latest   1815c82652c0    6 days ago         1.84 kB
 ```
-여기서 신기한 점을 확인해볼 수 있습니다. Dockerfile에서 FROM을 통해 지정한 node라는 이름의 base image까지 설치되어 있는 것을 확인해볼 수 있습니다. 말 그대로 이건 base image이기 때문에 node-app 이미지를 지운 뒤에야 base image인 node image를 제거할 수 있습니다.
+여기서 신기한 점을 확인해볼 수 있습니다. Dockerfile에서 FROM을 통해 지정한 node라는 이름의 base image까지 설치되어 있는 것을 확인해 볼 수 있습니다. 말 그대로 이건 base image이기 때문에 node-app 이미지를 지운 뒤에야 base image인 node image를 제거할 수 있습니다.
 
 ## Docker run
 > 그럼 이제 위에서 build한 이미지를 기반으로 컨테이너를 run 시켜봅시다.
@@ -136,7 +136,7 @@ docker tag node-app:0.2 gcr.io/[project-id]/node-app:0.2
 ```
 docker push gcr.io/[project-id]/node-app:0.2
 ```
-GCR의 푸시된 이미지는 "Google cloud 상에 Container Registry"에서 확인할 수 있습니다. 이제부터는 GCR의 이미지를 pull 받아서 정상적으로 작동하는지 테스트를 해보겠습니다. 이를 위해 기존에 설치되어있던 도커 이미지와 컨테이너를 모두 제거해주는 작업을 먼저 해주도록 하겠습니다. 우선 컨테이너의 실행을 멈추고 삭제하는 명령어입니다.
+GCR의 푸시된 이미지는 "Google cloud 상에 Container Registry"에서 확인할 수 있습니다. 이제부터는 GCR의 이미지를 pull 받아서 정상적으로 작동하는지 테스트를 해보겠습니다. 이를 위해 기존에 설치되어 있던 도커 이미지와 컨테이너를 모두 제거해주는 작업을 먼저 해주도록 하겠습니다. 우선 컨테이너의 실행을 멈추고 삭제하는 명령어입니다.
 ```
 docker stop $(docker ps -q)
 docker rm $(docker ps -aq)
