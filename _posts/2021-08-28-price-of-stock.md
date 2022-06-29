@@ -61,7 +61,7 @@ vector<int> solution(vector<int> prices)
 다음 풀이로 넘어가기 전에 stack 자료 구조에 대해서 짚어봅시다.
 
 ## stack이란?
-> **LIFO(Last In First Out) 구조로 이루어져 있으며 C++에서는 stack이라는 헤더파일 내에 들어있습니다.** 
+> **LIFO(Last In First Out) 구조로 이루어져 있으며 C++에서는 stack이라는 헤더파일 내에 들어 있습니다.** 
 **stack.top()이라는 메소드를 통해서 top에 있는 원소를 참조할 수 있고 stack.pop()을 통해서 최상단의 원소를 지워낼 수 있습니다. stack.pop()을하면 리턴값으로 pop()처럼 stack top에 있는 원소가 리턴된다고 생각하기 쉽지만 그렇지 않으므로 주의하시길 바랍니다.**
 그 이외에도 **스택에 원소를 넣어주는 stack.push()
 스택이 비어있는 지 확인해주는 stack.empty()
