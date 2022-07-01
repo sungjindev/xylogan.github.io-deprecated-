@@ -42,7 +42,7 @@ stringstream ss(input);
 ``` cpp
 ss.str(input);
 ```
-근데 여기서 하나 주의할 것이 같은 **stringstream 객체를 어느정도 쓰다가 ss.str(input);과 같이 새로운 string 값을 넣어준 뒤 바로 사용하려고 하면 이전 string 값으로 사용하다가 남은 Flag들이 그대로 저장되어 있어서 올바르게 동작하지 않을 수도 있으니 동일한 stringstream 객체에 string 값만 바꿔가면서 계속 사용한다고 한다면 새로운 string 값을 사용하기 전에 반드시 아래와 같이 클리어를 한번 해주고 사용**합시다.
+근데 여기서 주의할 것이 같은 **stringstream 객체를 어느정도 쓰다가 ss.str(input);과 같이 새로운 string 값을 넣어준 뒤 바로 사용하려고 하면 이전 string 값으로 사용하다가 남은 Flag들이 그대로 저장되어 있어서 올바르게 동작하지 않을 수도 있으니 동일한 stringstream 객체에 string 값만 바꿔가면서 계속 사용한다고 한다면 새로운 string 값을 사용하기 전에 반드시 아래와 같이 클리어를 한번 해주고 사용**합시다.
 ``` cpp
 ss.clear();
 ```
