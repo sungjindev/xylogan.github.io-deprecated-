@@ -1,5 +1,5 @@
 ---
-title: [백준 1463번]_ DP - 실버3 - 1로 만들기
+title: 백준 1463번_ DP - 실버3 - 1로 만들기
 categories: [Computer science, Algorithm]
 tags: [실버3, baekjoon online judge, dynamic programming, 1463번, 1로 만들기, DP, 알고리즘, 코딩 테스트, 백준]
 ---
