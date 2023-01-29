@@ -29,10 +29,10 @@ description: >-                        # used by seo meta and the atom feed
   Deeper, deeper.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
-url: 'https://l-o-g-a-n.github.io'
+url: 'https://xylogan.github.io'
 
 github:
-  username: L-o-g-a-n             # change to your github username
+  username: xylogan             # change to your github username
 
 twitter:
   username: twitter_username            # change to your twitter username
@@ -45,7 +45,7 @@ social:
   links:
     # The first element serves as the copyright owner's link
     - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/L-o-g-a-n       # change to your github homepage
+    - https://github.com/xylogan       # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username

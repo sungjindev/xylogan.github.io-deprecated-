@@ -1,2 +1,2 @@
-# L-o-g-a-n.github.io
-L-o-g-a-n's blog
+# xylogan.github.io
+xylogan's blog

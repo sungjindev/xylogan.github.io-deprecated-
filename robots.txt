@@ -2,4 +2,4 @@ User-agent: *
 
 Allow: /
 
-Sitemap: https://l-o-g-a-n.github.io/sitemap.xml
+Sitemap: https://xylogan.github.io/sitemap.xml
