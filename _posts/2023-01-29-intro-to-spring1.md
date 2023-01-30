@@ -32,5 +32,27 @@ Backend engineering을 공부하는 학생이라면 한번쯤 들어봤을 [김�
     * assertj: 테스트 코드를 좀 더 편하게 작성할 수 있도록 도와주는 라이브러리
     * spring-test: 스프링 통합 테스트 지원
 
+## 스프링 부트가 제공하는 Welcome page
+> "/sec/main/resources/static/index.html" 경로로 index.html 파일을 만들어주면 해당 index.html이 welcome page(root page)로 동작하게 됩니다. index.html 파일은 아래와 같은 간단한 예제 코드로 만들어 볼 수 있습니다.  
+
+```html
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+Hello
+<a href="/hello">hello</a>
+</body>
+</html>
+```
+
+## 스프링 부트 + Thymeleaf 템플릿 엔진 동작
+> 스프링 부트와 Thymeleaf 템플릿 엔진이 서로 어떻게 조화롭게 동작하는지 아래 구조를 보며 이해할 수 있습니다. 스프링 부트에 내장되어 있는 톰캣이 로컬 웹 서버를 띄워주고 @GetMapping("hello")을 가진 helloController가 model에 data라는 이름의 attribute에 "hello!!!"라는 값을 담아놓은 뒤 return "hello"을 통해 viewResolver에게 전달합니다. 컨트롤러에서 문자를 리턴하면 viewResolver가 "resources/templates/"의 경로에 리턴받은 값의 html 파일을 찾아 처리하여 웹 페이지로 띄워줍니다.
+![2](/assets/img/intro_to_spring/1/2.png){: w="100%" h="100%" style="border:1px solid #eaeaea; border-radius: 7px; padding: 0px;"}
+
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
