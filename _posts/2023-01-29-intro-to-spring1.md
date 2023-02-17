@@ -54,5 +54,13 @@ Hello
 ![2](/assets/img/intro_to_spring/1/2.png){: w="100%" h="100%" style="border:1px solid #eaeaea; border-radius: 7px; padding: 0px;"}
 
 
+## 빌드하고 실행하기
+> 터미널 환경에서 스프링 부트를 빌드하고 실행하는 방법입니다.
+```console
+./gradlew build
+cd build/libs
+java -jar hello-spring-0.0.1-SNAPSHOT.jar
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
