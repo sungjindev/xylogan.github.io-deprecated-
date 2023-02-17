@@ -33,7 +33,7 @@ Backend engineering을 공부하는 학생이라면 한번쯤 들어봤을 [김�
     * spring-test: 스프링 통합 테스트 지원
 
 ## 스프링 부트가 제공하는 Welcome page
-> "/sec/main/resources/static/index.html" 경로로 index.html 파일을 만들어주면 해당 index.html이 welcome page(root page)로 동작하게 됩니다. index.html 파일은 아래와 같은 간단한 예제 코드로 만들어 볼 수 있습니다.  
+> "/src/main/resources/static/index.html" 경로로 index.html 파일을 만들어주면 해당 index.html이 welcome page(root page)로 동작하게 됩니다. index.html 파일은 아래와 같은 간단한 예제 코드로 만들어 볼 수 있습니다.  
 
 ```html
 <!DOCTYPE HTML>
