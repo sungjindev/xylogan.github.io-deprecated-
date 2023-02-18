@@ -62,5 +62,11 @@ cd build/libs
 java -jar hello-spring-0.0.1-SNAPSHOT.jar
 ```
 
+## 정적 컨텐츠
+> 정적 컨텐츠 혹은 정적 페이지란 런타임 시에 컨텐츠의 내용이 변경되지 않는 말 그대로 현재 소스 코드 그대로 페이지를 보여주는 것을 의미합니다. 스프링 부트에서는 resources/static 폴더 밑에 담긴 html 파일의 경우 정적 컨텐츠로 활용합니다. 해당 경로에 html 파일을 만들고 "localhost:8080/hello-static.html" 식으로 접근하면 정적 페이지가 나타나게 됩니다.
+
+## MVC와 템플릿 엔진
+> MVC는 Model, View, Controller의 약자로 웹을 세 계층으로 분리하여 개발하는 것을 말합니다. Controller에 비즈니스 로직과 관련된 내용들이 처리되고 이때 일부 내용들을 모델에 담아 뷰로 넘겨줍니다. 뷰에서는 이렇게 전달받은 데이터들을 바탕으로 동적으로 페이지 출력에 집중하여 사용자에게 띄워줍니다. 이 내부 흐름은 앞서 설명드린 "스프링 부트 + Thymeleaf 템플릿 엔진 동작 원리"와 동일합니다.
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
