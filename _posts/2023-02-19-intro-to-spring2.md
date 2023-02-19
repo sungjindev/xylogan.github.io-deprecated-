@@ -148,5 +148,55 @@ class MemoryMemberRepositoryTest {
 테스트할 때 junit, assertJ 등의 툴을 이용하여 테스트를 편리하게 할 수 있는데 특히 내가 입력한 값과 테스트할 기능을 거친 뒤 값 비교를 할 때 Assertions에서 제공하는 다양한 메소드들을 활용하면 쉽게 테스트할 수 있습니다. 이때 Assertions를 쓰는 것이 귀찮으면 Assertions에 커서를 올리고 "option+enter"키를 입력하여 관련 툴을 Import 시켜주면 Assertions 없이 바로 aasertThat() 메소드를 사용할 수 있습니다. 이와 같이 유용한 IntelliJ 단축키들이 있는데 "cmd+option+v"를 어떤 메소드위에 커서를 올린 후 사용하면 해당 메소드가 리턴하는 반환형에 맞게 변수와 자료형이 왼쪽에 자동 완성되며 "cmd+shift+enter"를 입력하면 뒤따라올 괄호나 세미콜론 등을 자동 완성해줍니다. 이 외에도 변수명만 바뀌는 여러 줄의 동일한 소스코드를 복사 붙여넣기하여 활용할 때 변수명만 치환하기 위해서는 치환할 변수명에 커서를 올리고 "shift+F6"을 입력하여 쉽게 치환할 수 있습니다.   
 위 코드에서 알아두어여 할 것으로 우리는 MemoryMemberRepository 클래스의 findByName()과 같은 메소드에서 Null 값에 대한 유연한 처리를 위해 Optional이라는 Wrapper 클래스로 감싸놓았는데 그렇기 때문에 Optional로 감싸진 클래스에서 값을 추출하려면 get()이라는 메소드를 사용하여 값을 추출해야 합니다.
 
+## 서비스 코드
+> 비즈니스 로직을 처리하기 위해 서비스 코드를 아래와 같이 작성하였습니다. 회원 가입, 회원 조회와 관련된 메소드를 작성하였습니다.   
+   
+```java
+package hello.hellospring.service;
+
+import hello.hellospring.domain.Member;
+import hello.hellospring.repository.MemberRepository;
+import hello.hellospring.repository.MemoryMemberRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public class MemberService {
+    private final MemberRepository memberRepository = new MemoryMemberRepository();
+
+    /**
+     * 회원 가입
+     */
+    public Long join(Member member) {
+        //시나리오: 같은 이름이 있는 회원이 있어선 안된다.
+        validateDuplicateMember(member);    //ctrl+t를 통해 refactoring 관련된 검색을 할 수 있고 메소드를 검색하여 extract method를 하면 메소드를 뽑아낼 수 있다.
+
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+    private void validateDuplicateMember(Member member) {
+        memberRepository.findByName(member.getName())
+                        .ifPresent(member1 -> {
+                            throw new IllegalStateException("이미 존재하는 회원입니다.");
+                        });
+    }
+
+
+    /**
+     * 전체 회원 조회
+     */
+    public List<Member> findMembers() {     // 서비스 클래스 내에서는 조금 더 비즈니스에 가까운 용어로 이름을 선정한다. 리포지토리는 조금 더 데이터 처리에 가까운 용어로 선정
+        return memberRepository.findAll();
+    }
+
+    public Optional<Member> findOne(Long memberId) {
+        return memberRepository.findById(memberId);
+    }
+}
+```
+같은 이름의 회원이 저장되어선 안된다라는 시나리오에 맞춰서 중복성 검사를 해주는 함수를 만들어 주었습니다. memberRepository에서 findByName을 활용하였는데 이 메소드의 리턴값이 Optional이므로 값이 존재하는지 검증하는 ifPresent() 메소드를 활용할 수 있었습니다. 그 후 람다식을 활용하여 존재한다면 중복 회원이 존재한다는 에러를 던져주었습니다. 이렇게 구현 한 다음 해당 로직을 전체 드래그 한 뒤 "ctrl+t"를 입력하면 코드를 리팩토링하기 위한 다양한 기능들을 사용할 수 있는 창이 나타나는데 여기에 method를 검색하면 method를 뽑아낼 수 있는 extract method 기능이 있습니다. 위 코드는 이 기능을 통해 메소드를 뽑아낸 상태입니다.   
+서비스 관련 클래스에서는 비즈니스 로직을 처리하는 것이 핵심이기 때문에 메소드나 변수 이름을 정할 때 조금 더 비즈니스에 가까운 용어로 이름을 선정하는 것이 중요합니다. 이와 반대로 리포지토리 클래스는 조금 더 데이터 처리에 가까운 용어를 사용하도록 합니다.  
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
