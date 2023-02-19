@@ -77,5 +77,76 @@ public class MemoryMemberRepository implements MemberRepository {
 임의의 숫자인 id와 Member 객체를 Key-Value 쌍으로 저장하기 위해 HashMap을 사용해 주었고 임의의 id를 위해 long 데이터 타입의 변수를 선언해줬습니다. 위 코드에는 나와있진 않지만 Member 클래스 내 id 멤버 변수는 Long Wrapper 클래스로 선언되어 있습니다. 이들의 차이는 long은 데이터 타입 그 자체라 별도의 편리한 내장 메소드와 같은 기능들이 없지만 Long은 더욱 편리하게 사용하기 위해 다양한 내장 메소드를 지원한다는 점입니다. 또한 Long 클래스 내부적으로 value 멤버 변수의 데이터 타입으로 long 형을 사용하고 있어서 위처럼 Long Wrapper 클래스에 long 형을 넘겨주는 것이 가능합니다.   
 위 코드에서 추가적으로 알아두면 좋을 것이 findByName() 메소드에서 Java의 람다식을 활용했다는 점입니다. store.values()는 HashMap 구조의 Key-Value에서 value 값들을 불러오는데, 그것이 여기서는 Member들입니다. 그 Member들을 stream한다는 것은 Member 하나하나 loop를 돈다는 것이고 그 과정에서 filter를 씌워 각각 member에 들어있는 name의 값과 파라미터로 넘겨받은 name이 동일한 값인지 확인하여 findAny()를 통해 조건에 맞는 값을 모두 리턴한다는 의미입니다.
 
+## 테스트 코드
+> 큰 프로젝트라면 더욱 더 테스트 코드가 중요합니다. 테스트 코드는 test 관련 디렉토리 내에 테스트 하고자 하는 클래스의 경로와 동일한 패키지 구성을 만들고 동일한 클래스명 뒤에 보통 "Test"라는 키워드를 덧붙여 테스트 클래스를 생성합니다. 강의에서는 MemoryMemberRepository를 테스트 하기 위해 MemoryMemberRepositoryTest 클래스를 생성하였습니다. 코드는 아래와 같습니다.
+   
+```java
+package hello.hellospring.repository;
+
+import hello.hellospring.domain.Member;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+
+class MemoryMemberRepositoryTest {
+    MemoryMemberRepository repository = new MemoryMemberRepository();
+
+    @AfterEach  //각 메소드 별로 실행이 끝나고 바로 이어 실행되는 콜백 메소드
+    public void afterEach() {
+        repository.clearStore();
+    }
+
+    @Test   //테스트 하는 메소드 끼리 순서는 보장이 안된다!!! 즉 테스트 메소드는 다 따로 독립적으로 동작하도록 설계해야한다. 근데 여기서 계속 동일한 repository를 활용하고 있어서 에러가 뜸. 즉 테스트 메소드 끝날 때마다 비워줘야함.
+    public void save() {
+        Member member = new Member();
+        member.setName("spring");
+
+        repository.save(member);
+
+        Member result = repository.findById(member.getId()).get();
+//        Assertions.assertEquals(member, result); 이건 junit 사용
+        assertThat(member).isEqualTo(result);   //이건 assertJ 사용, 이게 더 편하다
+    }
+
+    @Test
+    public void findByName() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+        Member result1 = repository.findByName("spring1").get();//cmd+option+v로 왼쪽 변수 및 자료형 자동 완성, get이 optional 타입을 한번 까서 안에 값을 꺼내주는 것, cmd+shift+enter는 괄호나 세미콜론 자동 완성
+//        Assertions.assertThat(result1).isEqualTo(member1); 원래는 이게 맞지만 Assertions을 계속 쓰는 게 귀찮으므로 Assertions쪽에 커서를 옮기고 option+enter를 입력하여 Import를 해주면 그 후 편리하게 사용 가능
+         assertThat(result1).isEqualTo(member1);
+
+    }
+
+    @Test
+    public void findAll() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();  //여러개 같은 코드 복붙에서 변수명만 다 치환해서 바꾸고 싶을때는 shift + F6 
+        member2.setName("spring2");
+        repository.save(member2);
+
+        List<Member> result = repository.findAll();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+}
+```
+우선 테스트용 메소드가 여러개가 동일한 repository 객체를 사용하며 테스트를 진행하고 있는데 이렇게 되면 공유 변수가 참조되고, 테스트 메소드 끼리는 순서가 보장되지 않으므로 의도하지 않은 결과가 나오게 됩니다. 이를 방지하기 위해 1개의 테스트 메소드가 끝난 뒤에 공유 변수에 대해 초기화를 시켜주는 작업이 필요한데 AfterEach라는 어노테이션을 활용하여 이를 구현하였습니다. clearStore()라는 메소드는 MemoryMemberRepository 클래스에 멤버 함수로 HashMap을 비워주는 clear() 함수를 통해 구현하였습니다.   
+테스트할 때 junit, assertJ 등의 툴을 이용하여 테스트를 편리하게 할 수 있는데 특히 내가 입력한 값과 테스트할 기능을 거친 뒤 값 비교를 할 때 Assertions에서 제공하는 다양한 메소드들을 활용하면 쉽게 테스트할 수 있습니다. 이때 Assertions를 쓰는 것이 귀찮으면 Assertions에 커서를 올리고 "option+enter"키를 입력하여 관련 툴을 Import 시켜주면 Assertions 없이 바로 aasertThat() 메소드를 사용할 수 있습니다. 이와 같이 유용한 IntelliJ 단축키들이 있는데 "cmd+option+v"를 어떤 메소드위에 커서를 올린 후 사용하면 해당 메소드가 리턴하는 반환형에 맞게 변수와 자료형이 왼쪽에 자동 완성되며 "cmd+shift+enter"를 입력하면 뒤따라올 괄호나 세미콜론 등을 자동 완성해줍니다. 이 외에도 변수명만 바뀌는 여러 줄의 동일한 소스코드를 복사 붙여넣기하여 활용할 때 변수명만 치환하기 위해서는 치환할 변수명에 커서를 올리고 "shift+F6"을 입력하여 쉽게 치환할 수 있습니다.   
+위 코드에서 알아두어여 할 것으로 우리는 MemoryMemberRepository 클래스의 findByName()과 같은 메소드에서 Null 값에 대한 유연한 처리를 위해 Optional이라는 Wrapper 클래스로 감싸놓았는데 그렇기 때문에 Optional로 감싸진 클래스에서 값을 추출하려면 get()이라는 메소드를 사용하여 값을 추출해야 합니다.
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
