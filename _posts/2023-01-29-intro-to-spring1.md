@@ -68,5 +68,9 @@ java -jar hello-spring-0.0.1-SNAPSHOT.jar
 ## MVC와 템플릿 엔진
 > MVC는 Model, View, Controller의 약자로 웹을 세 계층으로 분리하여 개발하는 것을 말합니다. Controller에 비즈니스 로직과 관련된 내용들이 처리되고 이때 일부 내용들을 모델에 담아 뷰로 넘겨줍니다. 뷰에서는 이렇게 전달받은 데이터들을 바탕으로 동적으로 페이지 출력에 집중하여 사용자에게 띄워줍니다. 이 내부 흐름은 앞서 설명드린 "스프링 부트 + Thymeleaf 템플릿 엔진 동작 원리"와 동일합니다.
 
+## API
+> API 방식은 Controller에 비즈니스 로직과 관련된 내용들이 처리된다는 점이 MVC와 동일하지만 그 이후 템플릿 엔진이 아닌, 문자열 데이터 그대로나 객체 데이터가 JSON 형식 따위로 그대로 Http body에 담아 반환하는 것을 말합니다. MVC와 템플릿 엔진 방식과 다르게 viewResolver를 사용하지 않고 HttpMessageConverter를 사용하며 문자열 데이터의 경우에는 StringHttpMessageConverter를 사용하고 객체 데이터의 경우에는 디폴트로 JSON 변환을 하기 위해 MappingJackson2HttpMessageConverter를 사용하여 처리합니다. 추가적으로 클라이언트 단에서 Http Accept 헤더에 원하는 반환형을 지정할 수 있는데 이 정보와 컨트롤러의 반환 타입 정보를 조합하여 적절한 HttpMessageConverter를 선택하여 사용합니다. 구조는 아래와 같습니다.
+![3](/assets/img/intro_to_spring/1/3.png){: w="100%" h="100%" style="border:1px solid #eaeaea; border-radius: 7px; padding: 0px;"}
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
