@@ -72,5 +72,46 @@ java -jar hello-spring-0.0.1-SNAPSHOT.jar
 > API 방식은 Controller에 비즈니스 로직과 관련된 내용들이 처리된다는 점이 MVC와 동일하지만 그 이후 템플릿 엔진이 아닌, 문자열 데이터 그대로나 객체 데이터가 JSON 형식 따위로 그대로 Http body에 담아 반환하는 것을 말합니다. MVC와 템플릿 엔진 방식과 다르게 viewResolver를 사용하지 않고 HttpMessageConverter를 사용하며 문자열 데이터의 경우에는 StringHttpMessageConverter를 사용하고 객체 데이터의 경우에는 디폴트로 JSON 변환을 하기 위해 MappingJackson2HttpMessageConverter를 사용하여 처리합니다. 추가적으로 클라이언트 단에서 Http Accept 헤더에 원하는 반환형을 지정할 수 있는데 이 정보와 컨트롤러의 반환 타입 정보를 조합하여 적절한 HttpMessageConverter를 선택하여 사용합니다. 구조는 아래와 같습니다.
 ![3](/assets/img/intro_to_spring/1/3.png){: w="100%" h="100%" style="border:1px solid #eaeaea; border-radius: 7px; padding: 0px;"}
 
+## MVC와 API를 활용한 컨트롤러 예제 코드
+>   
+
+```java
+@Controller
+public class HelloController {
+    @GetMapping("hello-mvc")    //MVC와 템플릿 엔진을 활용한 컨트롤러
+    public String helloMvc(@RequestParam("name") String name, Model model) {
+        model.addAttribute("name", name);
+        return "hello-template";
+    }
+
+    @GetMapping("hello-string") //API를 활용해 문자열 데이터 반환, 문자열 형식으로 Http body에 담아 출력
+    @ResponseBody
+    public String helloString(@RequestParam("name") String name) {
+        return "hello " + name; //"hello spring!!!"
+    }
+
+    @GetMapping("hello-api")    //API를 활용해 객체 데이터 반환, JSON 형식으로 Http body에 담아 출력
+    @ResponseBody
+    public Hello helloApi(@RequestParam("name") String name) {
+        Hello hello = new Hello();
+        hello.setName(name);
+        return hello;
+    }
+
+    static class Hello {    //객체를 반환하기 위해 static class를 생성하고 getter와 setter를 정의
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+}
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
