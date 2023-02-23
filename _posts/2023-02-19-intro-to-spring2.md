@@ -195,7 +195,88 @@ public class MemberService {
     }
 }
 ```
-같은 이름의 회원이 저장되어선 안된다라는 시나리오에 맞춰서 중복성 검사를 해주는 함수를 만들어 주었습니다. memberRepository에서 findByName을 활용하였는데 이 메소드의 리턴값이 Optional이므로 값이 존재하는지 검증하는 ifPresent() 메소드를 활용할 수 있었습니다. 그 후 람다식을 활용하여 존재한다면 중복 회원이 존재한다는 에러를 던져주었습니다. 이렇게 구현 한 다음 해당 로직을 전체 드래그 한 뒤 "ctrl+t"를 입력하면 코드를 리팩토링하기 위한 다양한 기능들을 사용할 수 있는 창이 나타나는데 여기에 method를 검색하면 method를 뽑아낼 수 있는 extract method 기능이 있습니다. 위 코드는 이 기능을 통해 메소드를 뽑아낸 상태입니다. 또한 이후에 이어서 서비스 클래스와 관련한 테스트 코드를 작성할텐데 클래스에 커서를 올리고 "cmd+shift+t"를 누르면 테스트 코드를 자동으로 만들어주는 창이 나타납니다. 이를 활용하면 조금 더 편리하게 테스트 코드를 만들 수 있습니다. 이 외에도 서비스 관련 클래스에서는 비즈니스 로직을 처리하는 것이 핵심이기 때문에 메소드나 변수 이름을 정할 때 조금 더 비즈니스에 가까운 용어로 이름을 선정하는 것이 중요합니다. 이와 반대로 리포지토리 클래스는 조금 더 데이터 처리에 가까운 용어를 사용하도록 합니다.  
+같은 이름의 회원이 저장되어선 안된다라는 시나리오에 맞춰서 중복성 검사를 해주는 함수를 만들어 주었습니다. memberRepository에서 findByName을 활용하였는데 이 메소드의 리턴값이 Optional이므로 값이 존재하는지 검증하는 ifPresent() 메소드를 활용할 수 있었습니다. 그 후 람다식을 활용하여 존재한다면 중복 회원이 존재한다는 에러를 던져주었습니다. 이렇게 구현 한 다음 해당 로직을 전체 드래그 한 뒤 "ctrl+t"를 입력하면 코드를 리팩토링하기 위한 다양한 기능들을 사용할 수 있는 창이 나타나는데 여기에 method를 검색하면 method를 뽑아낼 수 있는 extract method 기능이 있습니다. 위 코드는 이 기능을 통해 메소드를 뽑아낸 상태입니다. 또한 이후에 이어서 서비스 클래스와 관련한 테스트 코드를 작성할텐데 클래스에 커서를 올리고 "cmd+shift+t"를 누르면 테스트 코드를 자동으로 만들어주는 창이 나타납니다. 이를 활용하면 조금 더 편리하게 테스트 코드를 만들 수 있습니다. 이 외에도 서비스 관련 클래스에서는 비즈니스 로직을 처리하는 것이 핵심이기 때문에 메소드나 변수 이름을 정할 때 조금 더 비즈니스에 가까운 용어로 이름을 선정하는 것이 중요합니다. 이와 반대로 리포지토리 클래스는 조금 더 데이터 처리에 가까운 용어를 사용하도록 합니다.
+
+## 서비스 코드에 대한 테스트 코드
+> 위에 작성한 서비스 코드에 대한 테스트 코드는 아래와 같습니다.   
+   
+```java
+package hello.hellospring.service;
+
+import hello.hellospring.domain.Member;
+import hello.hellospring.repository.MemberRepository;
+import hello.hellospring.repository.MemoryMemberRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+class MemberServiceTest {
+
+    MemberService memberService;
+    MemoryMemberRepository memoryMemberRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        memoryMemberRepository = new MemoryMemberRepository();
+        memberService = new MemberService(memoryMemberRepository);  //이런게 MemberService 클래스 입장에서 DI(Dependency Injection)
+    }
+
+    @AfterEach
+    public void afterEach() {
+        memoryMemberRepository.clearStore();
+    }
+    @Test
+    void 회원가입() {
+        //given
+        Member member = new Member();
+        member.setName("spring");
+
+        //when
+        Long saveId = memberService.join(member);
+
+        //then
+        Member findMember = memberService.findOne(saveId).get();
+        assertThat(member.getName()).isEqualTo(findMember.getName());
+    }
+
+    @Test
+    public void 중복_회원_예외() {
+        //given
+        Member member1 = new Member();
+        member1.setName("spring");
+
+        Member member2 = new Member();
+        member2.setName("spring");
+        //when
+        memberService.join(member1);
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+        assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+
+//        try {
+//            memberService.join(member2);
+//            fail();
+//        } catch (IllegalStateException e) {
+//            assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+//        }
+
+        //then
+    }
+
+    @Test
+    void findMembers() {
+    }
+
+    @Test
+    void findOne() {
+    }
+}
+```
+서비스에 대한 테스트를 진행하기 위해, 지금까지는 리포지토리 객체를 new()로 테스트 코드 내에서 새로 만들어줬었지만 사실 이렇게 되면 MemberService 클래스에서 new()로 생성한 리포지토리 객체와 MemberServiceTest 클래스에서 생성한 리포지토리 객체는 다른 객체라서 문제가 발생합니다. 이를 해결하기 위해 DI(Dependency Injection), 즉 의존성 주입을 해줍니다. 의존성 주입은 쉽게 말해 외부에서 객체를 넣어주는 것인데 MemberService 클래스에 MemberRepository를 담을 빈 객체를 만들고 생성자(생성자는 "cmd+n" 명령어로 쉽게 생성)를 통해 외부에서 매개변수로 주입해주면 됩니다. 그리고 MemberServiceTest 코드에서는 각 테스트 메소드마다 독립적으로 동작하므로 BeforeEach 어노테이션을 활용해 각 테스트 메소드가 실행되기 전에 공유할 레포지토리와 서비스 객체를 만들어주도록 합니다.   
+여기서 또 중요한 내용으로는 Try Catch문 대용으로 쉽게 사용할 수 있는 assertThrows(예외 클래스, 테스트할 로직)가 있습니다. 테스트할 로직을 실행했을 때 파라미터로 넘겨준 예외 클래스와 동일한 예외가 발생하면 테스트에 성공시켜주는 메소드입니다. 반환형으로 해당 예외를 잡아서 getMessage()와 같은 메소드를 활용하면 에러 메세지도 검출하여 테스트할 수 있습니다. 
 
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
