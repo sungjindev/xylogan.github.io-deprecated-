@@ -209,5 +209,35 @@ public interface SpringDataJpaMemberRepository extends JpaRepository<Member, Lon
 }
 ```
 
+## AOP
+> AOP란 Aspect Oriented Programming라는 뜻으로 공통 관심 사항(cross-cutting concern)와 핵심 관심 사항(core concern) 분리하는 것을 말합니다. 예를들어 현업에서 각 메소드별 호출 시간을 구하라고 과제를 받는다면 모든 메소드의 시작과 끝에 시간을 측정하는 메소드를 넣어주는 것이 간단한 해결책이 될 수 있겠지만 수많은 메소드가 있다면 구현하는데 굉장히 시간도 오래걸리고 비효율 적일 것입니다. 이렇게 중복되는 로직을 공통 관심 사항으로 분리하는 것을 말합니다. 분리 한 뒤에 필요한 핵심 관심 사항을 지정하여 일부에만 적용할 수 있도록 사용하는 것인데 스프링에서는 이를 위해 프록시 방식을 활용합니다. 예를들어 memberService에 AOP를 적용한다면 프록시를 활용하여 가짜 memberService 객체를 생성하여 공통 관심 사항 AOP 로직을 실행시키고 그 후 joint.Proceed() 메소드를 활용하여 진짜 memberService로 이동합니다. AOP를 적용하기 위해서 aop 패키지 밑에 TimeTraceAop 클래스를 만들어 주었고 @Component 어노테이션을 통해 스프링 빈에 등록해줬습니다. 예제 코드는 아래와 같습니다.   
+
+```java
+package hello.hellospring.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class TimeTraceAop {
+    @Around("execution(* hello.hellospring..*(..))")    //main package 하위에 AOP를 다 적용하라는 뜻
+    public Object execute(ProceedingJoinPoint joinPoint) throws Throwable { //메소드 호출할 때마다 인터셉트가 딱딱 걸리는 것
+        long start = System.currentTimeMillis();
+        System.out.println("START: " + joinPoint.toString());
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("END: " + joinPoint.toString() + " " + timeMs + "ms");
+        }
+
+    }
+}
+``` 
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
