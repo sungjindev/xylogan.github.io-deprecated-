@@ -137,5 +137,58 @@ public class JdbcTemplateMemberRepository implements MemberRepository {
 }
 ```
 
+## JPA
+> JPA란 Java Persistence API입니다. JPA는 자바 진영에서 ORM(Object-Relational Mapping) 기술 표준으로 사용되는 인터페이스의 모음입니다. JPA는 인터페이스 역할로, JPA를 구현한 대표적인 오픈소스로는 Hibernate가 있습니다. ORM은 Object-Relational Mapping으로 Object와 RDB의 테이블을 매핑하여 관리해주는 것으로 생각하면 됩니다. JPA를 사용하기 위해 dependencies에 "implementation 'org.springframework.boot:spring-boot-starter-data-jpa'"를 추가해주면 됩니다. 이 내부 자체적으로 jdbc를 담고 있으므로 이와 관련된건 지워줘도 됩니다. 예제로 사용했던 Member를 테이블로 매핑하기 위해 JPA가 관리하는 객체로 만들어줘야 합니다. 해당 클래스에 @Entity 어노테이션을 붙여주면 됩니다. Member 클래스 내 id는 PK(Primary Key)이므로 @Id 어노테이션을 붙여주고, @GeneratedValue(strategy = GenerationType.IDENTITY)도 붙여줍니다. IDENTITY 생성 전략이란 DB에서 알아서 Id값을 생성해주는 전략을 말합니다.   
+아래는 JpaMemberRepository 코드입니다. JPA는 EntityManager로 모두 동작하기 때문에 해당 객체를 만들어 줘야합니다. 이때 "data-jpa"를 Implementation 하기만 하면 스프링 부트가 알아서 데이터 베이스와 연결해서 EntityManager를 만들어주므로 주입해서 사용만하면 됩니다.   
+em.persist()를 사용하면 DataBase에 쿼리를 날려줌과 동시에 별로도 RowMapper 등을 사용할 필요 없이 해당 객체에 값 setting도 다 해줍니다. 마찬가지로 em.find(entity.class, PK)를 사용하면 해당 Entity 테이블에서 해당 PK 값을 통해 조회 쿼리를 날려줍니다.   
+여기서 주의할 점이 findById()와 같이 1 건의 결과가 나오는 PK를 활용한 쿼리들은 간단히 JPA 메소드로 처리가 가능한데, PK 기반이 아닌 것들은 JPQL을 별도로 작성해줘야 합니다. JPQL이란 쿼리를 테이블 대상이 아니고 객체를 대상으로 쿼리를 날리는 것입니다. 즉 여기서는 Member @Entity를 대상으로 쿼리를 날리는 것입니다.   
+    
+```java
+package hello.hellospring.repository;
+
+import hello.hellospring.domain.Member;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
+
+public class JpaMemberRepository implements MemberRepository{
+    private final EntityManager em; //JPA는 EntityManager로 모두 동작함
+
+    public JpaMemberRepository(EntityManager em) {  //data-jpa를 Implementation하면 스프링 부트가 알아서 데이터 베이스와 연결해서 EntityManager를 만들어주므로 주입만 하면 됌
+        this.em = em;
+    }
+
+    @Override
+    public Member save(Member member) {
+        em.persist(member);
+        return member;
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
+    }
+
+    @Override   //JPA 특징이 findById와 같이 단 건의 결과가 나오는 PK를 활용한 건 간단히 JPA 메소드로 해결이 가능한데, PK 기반이 아닌 것들은 JPQL을 작성해 줘야함.
+    public Optional<Member> findByName(String name) {
+        List<Member> result = em.createQuery("select m from Member m where m.name = :name", Member.class)
+                .setParameter("name", name)
+                .getResultList();
+
+        return result.stream().findAny();
+
+
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member m", Member.class)
+                .getResultList();   //JPQL이란 쿼리를 테이블 대상이 아니고 객체를 대상으로 쿼리를 날리는 것, Member @Entity를 대상으로 쿼리를 날리는 것 m은 Alias
+    }
+}
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
