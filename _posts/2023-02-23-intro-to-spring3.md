@@ -57,7 +57,51 @@ public class SpringConfig {
 ```
 
 ## DI(Dependency Injection) 의존성 주입
-> 의존성 주입이란 외부에서 객체를 넣어주는 것을 말하는데, 총 3가지의 구현 방법이 있습니다. 넣고싶은 클래스에 필드를 만들어서 필드에 @Autowired를 사용해 스프링 빈을 주입하는 필드 주입 방법과, 넣고싶은 클래스에 생성자를 만들어서 @Autowired를 사용해 스프링 빈을 주입하는 생성자 주입 방법, 그리고 마지막으로 setter를 활용하는 방법이 있습니다. setter를 사용하면 setter가 public으로 노출되어 있어야만해서 중간에 값을 잘못 바꾸는 문제가 생길 수 있고 필드를 활용하게 되면 해당 클래스가 뜰 때만 넣어주게 되서 중간에 바꿀 수 있는 방법이 없습니다. **따라서 생성자를 통한 의존성 주입을 가장 권장합니다.**
+> 의존성 주입이란 외부에서 객체를 넣어주는 것을 말하는데, 총 3가지의 구현 방법이 있습니다. 넣고싶은 클래스에 필드를 만들어서 필드에 @Autowired를 사용해 스프링 빈을 주입하는 필드 주입 방법과, 넣고싶은 클래스에 생성자를 만들어서 @Autowired를 사용해 스프링 빈을 주입하는 생성자 주입 방법, 그리고 마지막으로 setter를 활용하는 방법이 있습니다. setter를 사용하면 setter가 public으로 노출되어 있어야만해서 중간에 값을 잘못 바꾸는 문제가 생길 수 있고 필드를 활용하게 되면 해당 클래스가 뜰 때만 넣어주게 되서 중간에 바꿀 수 있는 방법이 없습니다. **따라서 생성자를 통한 의존성 주입을 가장 권장합니다.** 
+
+## HTML form태그에서 Post 요청
+> 아래 HTML의 form 태그를 보면 "/members/new" 경로로 Post 요청을 보내고 있음을 알 수 있습니다. 이때 사용자가 Input 태그에 어떤 값을 넣어주면 "name"이라는 Key값과 사용자가 넣어준 값이 Value가 매핑되어 "/members/new" 경로의 Post 요청을 담당하는 컨트롤러로 넘어가게 됩니다. 해당 컨트롤러를 보면 MemberForm이라는 클래스를 파라미터로 가지고 있는데 해당 클래스에는 Private field로 "name"이라는 변수를 가지고 있습니다. 이때 스프링에서는 동일한 변수 "name"에 알아서 해당 클래스의 setter를 이용해 값을 전달해주게 됩니다. 코드는 아래와 같습니다.   
+   
+```html
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+  <form action="/members/new" method="post">
+    <div class="form-group">
+      <label for="name">이름</label>
+      <input type="text" id="name" name="name" placeholder="이름을
+입력하세요"> </div>
+    <button type="submit">등록</button> </form>
+</div> <!-- /container -->
+</body>
+</html> 
+```
+   
+```java
+@PostMapping("members/new")
+public String create(MemberForm form) {
+    Member member = new Member();
+    System.out.println(form.getName());
+    member.setName(form.getName()) ;
+    memberService.join(member);
+    return "redirect:/";
+}
+```
+   
+```java
+public class MemberForm {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
 
 
 
