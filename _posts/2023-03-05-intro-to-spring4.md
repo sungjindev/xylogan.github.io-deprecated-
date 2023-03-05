@@ -190,5 +190,24 @@ public class JpaMemberRepository implements MemberRepository{
 }
 ```
 
+## 스프링 데이터 JPA
+> 스프링 데이터 JPA는 기본 JPA보다 더욱 간단하게 리포지토리에 구현 클래스 없이 인터페이스만으로 개발을 끝낼 수 있습니다. 그리고 반복적으로 개발해온 CRUD 기능도 알아서 제공해줍니다. SpringDataJpaMemberRepository 인터페이스 예제 코드는 아래와 같습니다. 스프링 데이터 JPA를 사용하기 위한 인터페이스는 JpaRepository 인터페이스를 상속 받아야 합니다. 인터페이스가 인터페이스를 받을 때는 Implements가 아니고 extends를 사용해야 합니다. 인터페이스가 JpaRepository를 상속 받고 있으면 해당 인터페이스의 구현체를 스프링이 자동으로 만들어주고 스프링 빈에 등록까지 해줍니다. 즉 저희는 이따가 SpringConfig에서 의존성 주입하여 사용해주기만 하면 됩니다. 이렇게 스프링 데이터 JPA를 사용하면 기본적인 CRUD 메소드는 다 제공해주는데 findByName()과 같이 각자 서비스의 비즈니스 로직마다 다른 변수명을 가지는 메소드들은 @Override를 활용하여 만들어 줘야합니다. 이렇게 만들어주면 스프링 데이터 JPA가 분석하여 JPQL로 변환하여 만들어줍니다.   
+   
+```java
+package hello.hellospring.repository;
+
+import hello.hellospring.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface SpringDataJpaMemberRepository extends JpaRepository<Member, Long>, MemberRepository {  //인터페이스가 인터페이스를 받을 때는 Implements가 아니고 extends이다.
+    //JpaRepository<>를 받고 있으면 구현체를 자동으로 만들어준다. 그 후 자동으로 스프링 빈에 등록해줌.
+    @Override
+    Optional<Member> findByName(String name);   //이렇게 일반적이지 않은 비즈니스 로직에 대한 메소드들은 오버라이드해줘야함.
+    //이렇게 하면 JPQL로 "select m from Member m where m.name = ?"로 짜줌.
+}
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/dashboard
