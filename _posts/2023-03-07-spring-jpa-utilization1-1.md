@@ -44,5 +44,47 @@ public void $NAME$() throws Exception {
 }
 ```
 
+## @Transactional 어노테이션
+> JPA를 사용할 때 EntityManager를 사용하게 됩니다. EntityManager를 통한 모든 데이터 변경은 항상 트랜잭션 안에서 이루어져야 합니다. 따라서 테스트 코드에서 EntityManager를 통한 레포지토리 테스트를 한다던지 할 때 반드시 @Transactional 어노테이션을 붙여줘야 합니다. 그리고 특수한 경우로 Test 코드에서 @Transactional 어노테이션을 붙이면 자동으로 테스트가 끝난 뒤 테이블을 롤백시켜줍니다. 이래야 반복적인 테스트가 가능하기 때문입니다. 만약에 이 롤백 옵션을 끄고 확인하고 싶다면 @Rollback(false) 어노테이션을 붙이면 됩니다. testMember() 예제 코드는 아래와 같습니다.    
+    
+```java
+package jpabook.jpashop;
+
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class)    //Junit한테 스프링과 관련된 테스트를 한다고 알려주는 것
+@SpringBootTest //Spring Boot로 테스트하기 위해 필요
+public class MemberRepositoryTest {
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Test
+    @Transactional
+    public void testMember() throws Exception {
+        //given
+        Member member = new Member();
+        member.setUsername("memberA");
+
+        //when
+        Long saveId = memberRepository.save(member);
+        Member findMember = memberRepository.find(saveId);
+
+        //then
+        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
+
+    }
+}
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
