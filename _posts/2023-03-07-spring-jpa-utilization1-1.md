@@ -30,6 +30,18 @@ logging: #로그 레벨을 정하는 것
     org.hibernate.SQL: debug #JPA 하이버네이트가 생성하는 SQL이 다 보인다
 ```
 
+## Live Templates
+> IntelliJ Settings에 들어가서 Live Templates를 검색해보면 해당 탭에서 사용자가 자주 반복해서 쓰는 코드를 템플릿화 시키는 설정을 할 수 있습니다. 강의 중에서는 Test 코드를 작성할 때 //given, //when, //then을 많이 활용하므로 이와 관련된 아래 코드를 tdd라는 Abbreviation으로 만들어서 사용하고 있는데 이를 작성해두면 편리하므로 설정해두도록 합니다. Template text 코드는 아래와 같습니다.
+```java
+@Test
+public void $NAME$() throws Exception {
+    //given
+    $END$
+    //when
+    
+    //then
+}
+```
 
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
