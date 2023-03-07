@@ -12,7 +12,7 @@ Backend engineering을 공부하는 학생이라면 한번쯤 들어봤을 [김�
 ```yml
 spring:
     datasource:
-      url: jdbc:h2:tcp://localhost/~/jpashop;MVCC=TRUE
+      url: jdbc:h2:tcp://localhost/~/jpashop
       username: sa
       password:
       driver-class-name: org.h2.Driver
@@ -31,7 +31,8 @@ logging: #로그 레벨을 정하는 것
 ```
 
 ## Live Templates
-> IntelliJ Settings에 들어가서 Live Templates를 검색해보면 해당 탭에서 사용자가 자주 반복해서 쓰는 코드를 템플릿화 시키는 설정을 할 수 있습니다. 강의 중에서는 Test 코드를 작성할 때 //given, //when, //then을 많이 활용하므로 이와 관련된 아래 코드를 tdd라는 Abbreviation으로 만들어서 사용하고 있는데 이를 작성해두면 편리하므로 설정해두도록 합니다. Template text 코드는 아래와 같습니다.
+> IntelliJ Settings에 들어가서 Live Templates를 검색해보면 해당 탭에서 사용자가 자주 반복해서 쓰는 코드를 템플릿화 시키는 설정을 할 수 있습니다. 강의 중에서는 Test 코드를 작성할 때 //given, //when, //then을 많이 활용하므로 이와 관련된 아래 코드를 tdd라는 Abbreviation으로 만들어서 사용하고 있는데 이를 작성해두면 편리하므로 설정해두도록 합니다. Template text 코드는 아래와 같습니다.   
+    
 ```java
 @Test
 public void $NAME$() throws Exception {
