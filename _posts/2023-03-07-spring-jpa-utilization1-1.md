@@ -133,5 +133,117 @@ public class Album extends Item {
 }
 ```
 
+## JPA 내장 타입
+> JPA에서 새로운 값 타입을 정의해서 사용할 수 있는데 이것을 내장 타입이라고 합니다. 사용 방법은 간단합니다. 내장 타입으로 사용할 클래스에 **@Embeddable** 어노테이션을 붙여주고 내장 타입을 사용하는 각 필드 위에는 **@Embedded** 어노테이션을 붙여주면 됩니다. 
+
+## JPA 연관 관계
+> JPA에서 RDB 연관 관계를 매핑해주기 위해서 1:N이면 @ManyToOne, @OneToMany를 사용하고 1:1을 매핑해주기 위해서 @OneToOne 등을 사용합니다. 관계가 매핑이 된다고 하더라도 양방향 연관 관계가 있을 수 있고 단방향 연관 관계가 있을 수 있는데 양방향 연관 관계에서는 받으시 연관 관계의 주인을 정해줘야 합니다. 왜냐하면 두 테이블 각각에서 모두 데이터 수정이 가능한 상태이므로 JPA가 모호하게 받아들이기 때문입니다. 연관 관계의 주인은 보통 FK(N이 되는 쪽)를 가지고 있는 클래스에 잡아주면 됩니다. 이를 위해서는 주인이 아닌 클래스에 가서 @OneToMany(mappedBy = "member")과 같이 mappedBy와 관련된 어노테이션을 붙여주면 됩니다. mappedBy란 여기서 주인 클래스 내에 있는 "member"라는 필드의 거울 일 뿐이라고 선언하는 것입니다. 즉 이렇게 어노테이션을 붙이면 여긴 읽기 전용이 되는 것이라서 여기서 값을 넣어도 FK 값이 변경되지 않게됩니다. 이때 추가적으로 1:1 관계 일 때는 FK를 어느쪽이 가져도, 즉 연관 관계의 주인이 어느 쪽이 되어도 상관이 없는데 일반적으로 비즈니스 로직상 더 많이 접근할 것 같은 곳에 주인을 잡아주면 됩니다. 다음 예제 코드는 1:N 관계를 가지는 Member와 Order 클래스입니다.   
+   
+```java
+package jpabook.jpashop.domain;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter @Setter
+public class Member {
+    @Id @GeneratedValue
+    @Column(name = "member_id")
+    private Long id;
+
+    private String name;
+
+    @Embedded   //내장 타입을 표함하고 있다는 것을 나타내줘야함
+    private Address address;
+
+    @OneToMany(mappedBy = "member")  //Member 엔티티 기준에서 Order의 list들이 1:N 이므로
+    //양방향 연관 관계에서 연관 관계의 주인이 아니므로, mappedBy를 해주는데 여기서 member는 Order 테이블에 있는 FK인 member 필드를 의미함
+    //Order 테이블 내 FK인 member 필드의 거울일 뿐이라고 선언하는 것, 즉 여기는 그냥 읽기 전용이 되는 것이라 여기서 값을 넣어도 FK 값이 변경되지 않음
+    private List<Order> orders = new ArrayList<>();
+
+
+}
+```   
+    
+```java
+package jpabook.jpashop.domain;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "orders") //SQL의 ORDER와 충돌이 날 수도 있어서 관례적으로 orders라는 테이블 이름으로 바꿔줘야함
+@Getter @Setter
+public class Order {
+    @Id @GeneratedValue
+    @Column(name = "order_id")
+    private Long id;
+
+    @ManyToOne  //Order 엔티티 기준에서 Order가 N이고 Member가 1이므로
+    @JoinColumn(name = "member_id") //FK 이름이 member_id가 된다.
+    //양방향 연관 관계를 가지고 있으므로 연관 관계의 주인을 잡아줘야한다. 왜냐하면 두 군데 각각에서 모두 연관 관계 변경이 가능한 상태이므로 JPA가 혼란스러워함.
+    //연관 관계의 주인은 FK를 가지고 있는 얘로 잡으면 된다. 주인을 잡기 위해서는 주인아 아닌 곳에 가서 mapped by를 해주면 된다.
+    private Member member;
+
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToOne   //1:1 관계에서 연관 관계의 주인을 잡아주기가 되게 애매할 수 있는데 어느 곳을 잡아도 상관없지만 일반적으로 더 많이 접근할 것 같은 곳에 주인을 잡아주면 된다.
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
+
+    private LocalDateTime orderDate;    //주문 시간
+
+    @Enumerated(EnumType.STRING)    //enum 타입을 쓸 때 반드시 붙여주기!
+    //EnumType이 ORDINAL과 STRING이 있는데 ORDINAL은 enum 순서대로 1,2,3 이런식으로 숫자가 잡혀
+    // 나중에 enum이 중간에 추가되면 db가 꼬이므로 STRING 쓰기
+    private OrderStatus status; //주문 상태를 나타내는 enum 타입 [ORDER, CANCEL]
+
+
+}
+```
+
+## JPA enum 타입
+> JPA에서 enum 타입을 사용할 때는 반드시 enum 타입을 사용하는 필드 위에 **@Enumerated(EnumType.STRING)**과 같은 어노테이션을 붙여줘야 합니다. EnumType에는 ORDINAL과 STRING이 있는데 ORDINAL은 enum 순서대로 1,2,3 등과 같은 숫자가 매핑이 되는데 나중에 해당 enum 원소 중간에 데이터들이 추가되면 해당 순서가 틀어져 db가 꼬이므로 반드시 STRING을 사용해줘야 합니다. enum을 사용한 예제 코드는 아래와 같습니다.   
+   
+```java
+package jpabook.jpashop.domain;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+
+@Entity
+@Getter @Setter
+public class Delivery {
+
+    @Id @GeneratedValue
+    @Column(name = "delivery_id")
+    private Long id;
+
+    @OneToOne(mappedBy = "delivery")
+    private Order order;
+
+    @Embedded
+    private Address address;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;  //READY, COMP
+}
+```
+
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
