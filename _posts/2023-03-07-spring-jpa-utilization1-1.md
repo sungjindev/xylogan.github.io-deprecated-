@@ -86,5 +86,52 @@ public class MemberRepositoryTest {
 }
 ```
 
+## JPA 상속 관계 매핑
+> 객체끼리는 상속이라는 개념이 존재하지만, RDB 내 테이블끼리는 상속이라는 개념이 없습니다. 그대신 데이터베이스의 슈퍼 타입, 서브 타입이라는 관계를 이용해 상속 관계를 매핑할 수 있습니다. 먼저, JPA에서 상속을 하려면 상속 관계 전략을 부모 클래스에 반드시 설정해줘야 합니다. InheritanceType에는 3가지가 있습니다. JOINED는 가장 정규화된 상태로 테이블을 만드는 것이고 SINGLE_TABLE은 한 테이블만 만들고 그 안에 모든 필드 데이터를 집어넣는 것을 말하며 마지막으로 TABLE_PER_CLASS는 각 클래스 별로 테이블을 모두 만드는 것을 말합니다. 본 강의에서는 SINGLE_TABLE 전략을 사용하고 있기 때문에 부모 클래스가 되는 Item 클래스에 **@Inheritance(strategy = InheritanceType.SINGLE_TABLE)**을 붙여줬습니다. 또한 SINGLE_TABLE 전략은 여러 클래스의 모든 필드가 하나의 테이블에 함께 만들어지기 때문에 이를 구분하기 위한 컬럼이 필요한데 이를 위해서 **@DiscriminatorColumn(name = "dtype")** 어노테이션을 통해 dtype이라는 컬럼의 구분용 컬럼을 만들어 줬습니다. 이렇게 한 뒤 상속을 받는 클래스에 가서 **@DiscriminatorValue("A")** 이런 식으로 상속 받는 클래스를 해당 컬럼에서 어떤 값으로 표현할지 설정해줘야 합니다. 예제 코드는 아래와 같습니다. Album이라는 클래스가 Item을 상속받는 예제입니다.   
+    
+```java
+package jpabook.jpashop.domain.item;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//상속을 하려면 상속 관계 전략을 부모 클래스에 반드시 잡아줘야 한다. JOINED는 가장 정규화된 상태로 하는 것, SINGLE_TABLE은 한 테이블에 다 합치는 거, TABLE_PER_CLASS 는 클래스 별로 테이블 나누는 것
+@DiscriminatorColumn(name = "dtype")    //싱글 테이블 전략이다 보니까 서로 다른 Book, Album, Movie끼리 구분할 수 있게 컬럼을 만들어주는 것
+@Getter @Setter
+public class Item {
+
+    @Id @GeneratedValue
+    @Column(name = "item_id")
+    private Long id;
+
+    private String name;
+    private int price;
+    private int stockQuantity;
+}
+```    
+    
+```java
+package jpabook.jpashop.domain.item;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@Getter @Setter
+@DiscriminatorValue("A")
+public class Album extends Item {
+    private String artist;
+    private String etc;
+
+}
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
