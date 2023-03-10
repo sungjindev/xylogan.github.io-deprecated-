@@ -63,7 +63,7 @@ public class Category {
     private Long id;
 
     private String name;
-    
+
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parent;    //카테고리 구조를 구현하는 방법. 부모, 자식 필드를 만들고 아래와 같이
