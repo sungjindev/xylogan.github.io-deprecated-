@@ -100,5 +100,47 @@ public class Category {
     }
 ```
 
+## JPA를 활용한 MemberRepository 예시
+> JPA를 활용하여 MemberRepository를 활용한 코드 예제입니다. 우선, @PersistenceContext 어노테이션을 통해 스프링이 시작될 때 만들어주는 EntityManager를 주입받습니다. 그 후 이 em을 활용해서 쿼리를 날리게 되는데 쿼리의 결과가 단일 객체인 경우에는 JPQL이 필요없지만 여러 객체로 리턴되는 경우에는 JPQL을 사용해 쿼리를 날리게 됩니다. JPQL은 테이블 대상이 아니고 엔티티를 대상으로 쿼리를 날린다고 생각하면 됩니다. 특히 where 문이 들어가는 쿼리를 날릴 때 파라미터 바인딩을 활용하게 되는데 아래 예제를 보면 **:name**이라고 된 부분이 다음 줄의 setParameter의 **"name"**과 바인딩 되어 **"name"**의 value가 전달되게 됩니다.   
+   
+```java
+package jpabook.jpashop.repository;
+
+import jpabook.jpashop.domain.Member;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+@Repository
+public class MemberRepository {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    public void save(Member member)  {
+        em.persist(member);
+    }
+
+    public Member findOne(Long id) {
+        return em.find(Member.class, id);
+    }
+
+    public List<Member> findAll() {
+        //첫번째에 JPQL을 쓰고 두번째에 반환 타입을 적으면 된다. JPQL은 테이블 대상이 아니고 엔티티를 대상으로 쿼리를 날린다고 생각하면 됌
+        return em.createQuery("select m from Member m", Member.class)
+                .getResultList();
+    }
+
+    public List<Member> findByName(String name) {
+        return em.createQuery("select m from Member m where m.name = :name", Member.class)  //:name이라고 하면 밑에서 setParameter를 통해 "name"의 value와 바인딩 되는 것이다.
+                .setParameter("name", name) //위에 있는 :name이 여기 파라미터의 key값과 바인딩되어서 value가 위로 넘어가게 된다.
+                .getResultList();
+    }
+}
+```
+
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
