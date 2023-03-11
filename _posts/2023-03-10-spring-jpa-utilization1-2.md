@@ -101,7 +101,7 @@ public class Category {
 ```
 
 ## JPA를 활용한 MemberRepository 예시
-> JPA를 활용하여 MemberRepository를 활용한 코드 예제입니다. 우선, @PersistenceContext 어노테이션을 통해 스프링이 시작될 때 만들어주는 EntityManager를 주입받습니다. 그 후 이 em을 활용해서 쿼리를 날리게 되는데 쿼리의 결과가 단일 객체인 경우에는 JPQL이 필요없지만 여러 객체로 리턴되는 경우에는 JPQL을 사용해 쿼리를 날리게 됩니다. JPQL은 테이블 대상이 아니고 엔티티를 대상으로 쿼리를 날린다고 생각하면 됩니다. 특히 where 문이 들어가는 쿼리를 날릴 때 파라미터 바인딩을 활용하게 되는데 아래 예제를 보면 **:name**이라고 된 부분이 다음 줄의 setParameter의 **"name"**과 바인딩 되어 **"name"**의 value가 전달되게 됩니다.   
+> JPA를 활용하여 MemberRepository를 작성한 코드 예시입니다. 우선, @PersistenceContext 어노테이션을 통해 스프링이 시작될 때 만들어주는 EntityManager를 주입받습니다. 그 후 이 em을 활용해서 쿼리를 날리게 되는데 쿼리의 결과가 단일 객체인 경우에는 JPQL이 필요없지만 여러 객체로 리턴되는 경우에는 JPQL을 사용해 쿼리를 날리게 됩니다. JPQL은 테이블 대상이 아니고 엔티티를 대상으로 쿼리를 날린다고 생각하면 됩니다. 특히 where 문이 들어가는 쿼리를 날릴 때 파라미터 바인딩을 활용하게 되는데 아래 예제를 보면 **:name**이라고 된 부분이 다음 줄의 setParameter의 **"name"**과 바인딩 되어 **"name"**의 value가 전달되게 됩니다.   
    
 ```java
 package jpabook.jpashop.repository;
@@ -141,6 +141,99 @@ public class MemberRepository {
 }
 ```
 
+## JPA를 활용한 MemberService 예시
+> JPA를 활용하여 MemberService를 작성한 코드 예시입니다. 아래 코드에서 사용되는 핵심 개념들을 살펴보겠습니다. 우선, JPA를 통해 데이터 변경을 가져다주는 모든 로직들은 트랙잭션 안에서 처리되어야 합니다. 그래서 우리는 @Transactional 어노테이션을 클래스 위에 붙여주었습니다. 이렇게 클래스에 붙게 되는 해당 어노테이션은 클래스 내부에 퍼블릭 메소드에도 각각 적용이 되게 됩니다. 이때 readOnly = true라는 옵션을 함께 준 것을 확인할 수 있는데 이렇게 되면 단순 조회 쿼리를 날릴 때 성능 최적화가 되어 성능이 좋아집니다. 하지만 해당 클래스 내 메소드 중에서 쓰기 쿼리를 날리는 메소드에 대해서는 아래와 같이 별도로 readOnly = false 값이 디폴트로 설정되어 있는 @Transactional 어노테이션을 따로 붙여줘야 합니다. 또한 아래 코드를 보시면 유효성 검사 메소드를 만들어줬는데, 웹 애플리케이션 서버가 여러 개 뜨는 멀티 스레드 환경에서 해당 유효성 검사 메소드를 동시에 통과할 가능성이 있는 경우에 문제가 발생할 수 있으므로 실무에서는 최후의 방어 목적으로 데이터 베이스 단에서 Member의 Name 컬럼의 제약조건을 UNIQUE로 반드시 설정해줘야 합니다.   
+   
+```java
+package jpabook.jpashop.service;
+
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.repository.MemberRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@Transactional(readOnly = true)  //JPA를 통한 데이터 변경 모든 로직들은 트랜잭션 안에서 처리되어야 한다. 이 어노테이션이 javax에서 제공하는 것과 spring에서 제공하는 것이 있는데
+//spring에서 제공하는 걸 쓰는 것이 더 좋다. 왜냐하면 더 기능이 많다.
+//그리고 클래스 위에 다는 트랜잭셔널 어노테이션은 기본적으로 클래스 내 들어있는 모든 public 메소드에 적용이 되는데 readOnly = false를 설정해주면 단순 조회 쿼리할 때 성능 최적화가 되어 좋다.
+//현재 이 클래스에서는 단순 조회 쿼리 메소드가 더 많기 때문에 클래스 단에는 readOnly = true를 걸어주었다.
+//이때 쓰기 쿼리를 날리는 메소드에 대해서는 아래와 같이 default 값으로 readOnly = false가 되어있는 @Transactional 어노테이션을 따로 붙여줘야 한다.
+//@AllArgsConstructor //해당 클래스 내 모든 필드에 대한 생성자를 만들어 준다.
+@RequiredArgsConstructor    //final이 붙은 필드에 대한 생성자만 만들어 준다.
+public class MemberService {
+
+    private final MemberRepository memberRepository; //final을 붙이면 const와 같아서 생성 시점에 반드시 생성자를 정의해서 초기화를 해줘야만하고 그 이후에 값 변경이 불가능하게 된다.
+    //객체지향적 관점에서 데이터 변경 가능성이 적어져 더 안전하다
+
+//    @Autowired  //DI(의존성 주입)를 해줄 때 setter, field, constructor 세 가지 방법 중 constructor 방식이 제일 좋다.
+//    //그리고 참고로 요즘 스프링에서는 생성자가 하나 밖에 없는 경우에는 자동으로 @Autowired를 해주기 때문에 생략해도 된다.
+//    public MemberService(MemberRepository memberRepository) {
+//        this.memberRepository = memberRepository;
+//    }
+
+    //회원 가입
+    @Transactional
+    public Long join(Member member) {
+        validateDuplicateMember(member);    //중복 회원 검증
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+    private void validateDuplicateMember(Member member) {   //사실 이 유효성 검사 메소드는 완벽하지 않다. WAS(Web Application Server)가 여러개 뜬 상태에서
+        //멀티 스레드 환경에서 동시에 같은 이름으로 회원가입을 할 경우 해당 로직을 동시에 통과할 가능성이 있기 때문이다.
+        //그래서 실무에서는 최후의 방어 목적으로 DataBase 단에서 Member의 Name 컬럼의 제약조건을 UNIQUE로 설정해주는 것이 좋다.
+        List<Member> findMembers = memberRepository.findByName(member.getName());
+        if (!findMembers.isEmpty()) {
+            throw new IllegalStateException("이미 존재하는 회원입니다.");
+        }
+    }
+
+    //회원 전체 조회
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
+    }
+
+    public Member findOne(Long memberId) {
+        return memberRepository.findOne(memberId);
+    }
+
+
+}
+```
+
+## @AllArgsConstructor와 @RequiredArgsConstructor
+> 위 MemberService 예시 코드를 보시면 @AllArgsConstructor와 @RequiredArgsConstructor를 사용한 부분이 있습니다. @AllArgsConstructor는 해당 클래스 내 모든 필드에 대한 생성자를 알아서 만들어주는 롬복이고, @RequiredArgsConstructor는 final이 붙은 필드에 대해서 생성자를 만들어줍니다. 여기서 final에 대해서 자세히 알 필요가 있습니다. final을 붙이면 마치 C++의 const와 같아서 해당 객체 생성 시점에 반드시 생성자를 정의해서 초기화를 해줘야만 하고 그 이후에는 값 변경이 불가능학 됩니다. 이렇게 사용하는 것이 객체지향 프로그래밍 관점에서 데이터 변경 가능성이 적어져 유지보수하기가 더 쉽고 안전하게 됩니다. 또한 이를 활용해서 아래와 같이 MemberRepository에 EntityManager를 Injection할 때 활용할 수도 있습니다. 원래는 EntityManager 필드를 만들고 생성자를 만들어서 거기에 @Autowired를 붙여 Injection해도 되지만 이를 final 필드와 @RequiredArgsConstructor 어노테이션만으로 간단하게 구현할 수도 있습니다. 사실 원래 스프링에서는 EntityManager를 injection 받으려면 @PersistenceContext가 있어야 하지만 spring boot가 @Autowired로 Injection 받을 수 있게 구현해주기 때문에 이것도 가능한 것입니다.   
+   
+```java
+package jpabook.jpashop.repository;
+
+import jpabook.jpashop.domain.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class MemberRepository {
+
+//    @PersistenceContext
+//    private EntityManager em;
+
+    //위 EntityManager 코드를 아래와 같이 작성하는 것도 좋다. 일관성 목적
+    //원래 스프링에서는 EntityManager를 injection 받으려면 @PersistenceContext가 있어야하지만
+    //springboot가 @Autowired도 injection 받도록 지원을 해줌.
+    //여기서 필드가 현재 하나만 있기 때문에 자동으로 @Autowired가 들어가서 injection이 가능한 것이다.
+    private final EntityManager em;
+}
+```
 
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
