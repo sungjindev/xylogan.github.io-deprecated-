@@ -76,5 +76,8 @@ public class MemberServiceTest {
 }
 ```
 
+## 메모리 모드 테스트
+> 지금까지 테스트는 스프링 부트와 데이터베이스를 모두 띄운 상태로 테스트를 진행했었는데 이러기에는 너무 번거롭습니다. 따라서 메모리 모드로 테스트를 진행하는 방법을 알아보겠습니다. 우선, 스프링 프로젝트 내 test 디렉토리에 **resources/application.yml** 파일을 만들어줍니다. 이렇게 되면 테스트 쪽에서는 **test/resources/application.yml**의 설정을 참조하여 spring이 실행되게 됩니다. 이때 application.yml에 별다른 설정 코드들이 없어도 스프링 부트는 default값으로 메모리 모드로 테스팅을 진행하게 됩니다. 아니면 h2 데이터베이스를 메모리 모드로 맞춰서 테스트를 진행하려면 **application.yml**파일에서 spring:datasource:url을 **jdbc:h2:mem:test**로 수정해주면 됩니다.
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
