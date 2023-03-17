@@ -79,5 +79,60 @@ public class MemberServiceTest {
 ## 메모리 모드 테스트
 > 지금까지 테스트는 스프링 부트와 데이터베이스를 모두 띄운 상태로 테스트를 진행했었는데 이러기에는 너무 번거롭습니다. 따라서 메모리 모드로 테스트를 진행하는 방법을 알아보겠습니다. 우선, 스프링 프로젝트 내 test 디렉토리에 **resources/application.yml** 파일을 만들어줍니다. 이렇게 되면 테스트 쪽에서는 **test/resources/application.yml**의 설정을 참조하여 spring이 실행되게 됩니다. 이때 application.yml에 별다른 설정 코드들이 없어도 스프링 부트는 default값으로 메모리 모드로 테스팅을 진행하게 됩니다. 아니면 h2 데이터베이스를 메모리 모드로 맞춰서 테스트를 진행하려면 **application.yml**파일에서 spring:datasource:url을 **jdbc:h2:mem:test**로 수정해주면 됩니다.
 
+## CascadeType
+> JPA를 활용해서 연관 관계를 줄 때 @OneToMany, @OneToOne 등의 어노테이션을 사용하게 됩니다. 이때 **@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)**와 같이 cascade 옵션을 주게되면 해당 필드가 선언되어있는 엔티티가 persist될 때 cascade 옵션이 걸려있는 필드들도 연쇄적으로 함께 persist되게 됩니다. 따라서 아래 코드에서처럼 **orderRepository.save(order);**로 order만 persist해줘도 order 엔티티 안에 cascade 옵션이 걸려있는 orderItems, delivery 필드들도 함께 persist되어 별도로 개별 repository를 만들어서 persist를 호출할 필요가 없습니다.   
+   
+```java
+package jpabook.jpashop.service;
+
+import jpabook.jpashop.domain.Delivery;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
+import jpabook.jpashop.domain.item.Item;
+import jpabook.jpashop.repository.ItemRepository;
+import jpabook.jpashop.repository.MemberRepository;
+import jpabook.jpashop.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
+    private final ItemRepository itemRepository;
+
+    /*
+    주문
+     */
+    @Transactional
+    public Long order(Long memberId, Long itemId, int count) {
+
+        //엔티티 조회
+        Member member = memberRepository.findOne(memberId);
+        Item item = itemRepository.findOne(itemId);
+
+        //배송정보 생성
+        Delivery delivery = new Delivery();
+        delivery.setAddress(member.getAddress());
+
+        //주문 상품
+        OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
+
+        //주문 생성
+        Order order = Order.createOrder(member, delivery, orderItem);
+
+        //주문 저장
+        orderRepository.save(order);
+        return order.getId();
+
+    }
+}
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
