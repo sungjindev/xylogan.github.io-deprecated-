@@ -142,6 +142,74 @@ public class OrderService {
     }
 ```
 
+## 컨트롤러에서 Validation
+> 컨트롤러에서 넘겨받는 객체에 대해 Validation을 할 수 있습니다. 우선 넘겨받는 객체 클래스에서 Validation하고 싶은 필드에 **@NotEmpty** 등과 같은 어노테이션을 붙여 준 다음 해당 객체를 컨트롤러에서 넘겨받을 때 파라미터 앞에 **@Valid**라고 붙여주게 되면 컨트롤러에서 javax의 Validation을 사용하는구나 라고 인지한 뒤에 validation을 해주게 됩니다. 아래 예시에서는 MemberForm 클래스 내 name 필드에 @NotEmpty를 넣었기 때문에 name 필드에 대한 유효성 검사를 진행하게 됩니다. 이때 사용자가 name 값을 넣지 않은 채로 post 요청을 보내게 되면 validation에 의해 에러를 가진 채로 해당 컨트롤러가 끝나게 되는데 아래 코드 예시처럼 BindingResult 객체를 만들어주면 에러가 발생했을 때 해당 에러를 BindingResult 객체에 가진 채로 정상적으로 해당 컨트롤러 바디로 진입하게 됩니다. 그래서 컨트롤러 바디 내에서 에러를 검출해서 원하는 페이지로 다시 보낼 수 있습니다. 아래 예시에서는 createMemberForm 페이지로 보내게 되는데 이때 스프링이 BingdingResult를 페이지로 함께 넘겨주게 되어 thymeleaf 같은 뷰 페이지에서 이를 활용해서 쓸 수 있게 됩니다.   
+   
+```java
+package jpabook.jpashop.controller;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotEmpty;
+
+@Getter @Setter
+public class MemberForm {
+
+    @NotEmpty(message = "회원 이름은 필수입니다.")    //이게 있으면 아래 name이라는 필드의 값이 비어있으면 오류가 남
+    private String name;
+
+    private String city;
+    private String street;
+    private String zipcode;
+
+
+}
+```   
+   
+```java
+package jpabook.jpashop.controller;
+
+import jpabook.jpashop.domain.Address;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
+
+@Controller
+@RequiredArgsConstructor
+public class MemberController {
+
+    private final MemberService memberService;
+
+    @PostMapping("/members/new")
+    public String create(@Valid MemberForm form, BindingResult result) {  //@Valid 어노테이션을 붙이면 javax의 validation을 쓰는구나하고 인지한 뒤
+        //validation을 해주게 됌. 우리는 MemberForm에 @NotEmpty를 넣었기 때문에 그 유효성 검사를 쓸 수 있음
+        //이렇게 validation에 걸리게되면 원래 에러를 갖고 이 컨트롤러 밖으로 나가버리는데 BindingResult 객체를 하나 만들어주면
+        //에러가 발생했을 때 그 에러를 BindingResult 객체에 담고 정상적으로 이 컨트롤러 바디로 진입하게 됌!
+
+        if (result.hasErrors()) {   //그래서 이렇게 에러를 검출해서 원하는 페이지로 보내버릴 수도 있음!!!
+            return "/members/createMemberForm"; //이때 createMemberForm 페이지로 넘어갈 때 스프링이 BindingResult를 함께 보내줌
+        }   //그래서 thymeleaf가 뷰 페이지에서 이를 활용해서 쓸 수 있음!
+
+        Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
+
+        Member member = new Member();
+        member.setName(form.getName());
+        member.setAddress(address);
+
+        memberService.join(member);
+        return "redirect:/";
+    }
+}
+```
+
 
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
