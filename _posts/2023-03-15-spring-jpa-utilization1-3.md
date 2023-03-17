@@ -210,6 +210,8 @@ public class MemberController {
 }
 ```
 
+## Form 클래스 생성
+> JPA를 활용해서 개발을 하다보면 언제는 Entity 그 자체를 사용하고 언제는 별도의 Form 클래스를 만들어서 사용합니다. 가급적이면 Entity와 Form은 분리해주는 것이 좋고 서버 쪽에서 자체적으로 뷰 템플릿을 꾸려 내부적으로만 사용할 때는 Entity를 일부 출력 목적으로 사용할 수도 있겠지만 **API를 통해 객체를 반환해야할 경우에는 절대로 Entity 그 자체를 반환해서는 안됩니다.**
 
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
