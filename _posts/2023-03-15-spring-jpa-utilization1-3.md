@@ -213,5 +213,30 @@ public class MemberController {
 ## Form 클래스 생성
 > JPA를 활용해서 개발을 하다보면 언제는 Entity 그 자체를 사용하고 언제는 별도의 Form 클래스를 만들어서 사용합니다. 가급적이면 Entity와 Form은 분리해주는 것이 좋고 서버 쪽에서 자체적으로 뷰 템플릿을 꾸려 내부적으로만 사용할 때는 Entity를 일부 출력 목적으로 사용할 수도 있겠지만 **API를 통해 객체를 반환해야할 경우에는 절대로 Entity 그 자체를 반환해서는 안됩니다.**
 
+## 엔티티 업데이트 시 변경 감지 혹은 Merge
+> 엔티티의 값을 업데이트한 뒤 데이터베이스에 반영하고 싶을 때 두가지 방법을 사용할 수 있습니다. 하나는 Merge라는 방법과 또 다른 하나는 JPA 영속성 컨텍스트가 제공하는 변경 감지, 일명 Dirty Checking을 활용하는 방법이 있습니다. 결론부터 말하자면 Merge 방식은 절대 사용하지 말고 값 변경 감지에 의한 Dirty Checking을 사용할 것을 권장합니다. 우선 아래 코드가 대표적인 Merge의 예시입니다. BookForm이라는 클래스의 객체 값을 파라미터로 넘겨받은 뒤 book라는 새로운 객체를 만들어주고 새로 만든 객체에 값을 덮어 씌워 그 객체를 데이터베이스에 저장하려고 시도하고 있습니다. 아래 코드에는 나와 있지 않지만 itermService.saveItem()을 더 타고 들어가면 내부적으로 Merge()를 호출하여 처리하고 있습니다. 이렇게 새로 만든 객체는 JPA에서 관리하는 영속성 객체에 해당하지 않지만 영속성 객체의 id값은 그대로 지니고 있으므로 준영속 엔티티라고 부릅니다. 이러한 준영속 엔티티는 영속 엔티티와 다르게 JPA에 의해 관리되지 않아 Dirty Checking이 되지 않습니다. 따라서 Merge를 활용하게 되는데 Merge란 넘겨받은 준영속 엔티티의 각각의 필드 값으로 관련된 영속 엔티티의 값을 모두 대체(머지)시켜 버리고 영속 엔티티 값을 리턴하는 메서드입니다. 이렇게 되면 준영속 엔티티에 의도하지 않은 NULL 값 등이 필드에 들어가있을 때 강제로 영속 엔티티의 값에도 NULL이 들어가게 되어 데이터베이스에 그대로 반영됩니다. 따라서, Merge를 사용하기 보다는 무조건 Dirty Checking을 활용하는 것이 좋습니다. Dirty Checking을 활용한다는 것은 form.getId() 등과 같은 메서드를 활용해서 직접 itemService에서 영속성 객체를 조회한다음 해당 객체에 setter나 비즈니스 메서드 등을 활용해서 값을 설정해주는 것입니다.   
+   
+```java
+    @PostMapping("items/{itemId}/edit")  //여기서 {itemId}는 path variable이다.
+    public String updateItem(@PathVariable String itemId, BookForm form) {
+
+        Book book = new Book(); //이것 같은 경우에는 새로운 객체를 생성해서 값을 넣고 있고 그걸 레포지토리에 저장하고 있다.
+        //이러면 이건 영속성 관리가 되고 있는 객체가 아니라서 준영속 엔티티라고 부르게 되는데 이런 엔티티들을 Merge()로 저장하게 되면
+        //선택 할 수 없이 모든 필드가 준영속 엔티티의 필드 값으로 강제로 머지(대체) 되버린다. 이러면 의도치 않은 새로운 객체의 NULL값 등이 들어갈 수 있다.
+        // 따라서 이걸 쓰기보단 무조건적으로 JPA 영속성 컨텍스트가 제공하는 변경 감지, 즉 Dirty Checking을 활용해야한다.
+        //여기서 예를들면 form.getId()로 직접 itemService를 활용해서 영속성 객체를 조회한다음 거기에 setter를 써주면 된다.
+        //근데 사실 setter보다도 Entity 내에 비즈니스 메소드를 만들어서 쓰는게 좋다. Domain Driven Design으로 !!!
+        book.setId(form.getId());
+        book.setName(form.getName());
+        book.setPrice(form.getPrice());
+        book.setStockQuantity(form.getStockQuantity());
+        book.setAuthor(form.getAuthor());
+        book.setIsbn(form.getIsbn());
+
+        itemService.saveItem(book);
+        return "redirect:/items";
+    }
+```
+
 ## References
 > https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1/dashboard
