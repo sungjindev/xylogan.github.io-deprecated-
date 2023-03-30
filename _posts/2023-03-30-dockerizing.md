@@ -25,7 +25,7 @@ ENV PROFILE dev
 ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar", "/app.jar"]
 ```   
     
-우선 Spring Boot application을 도커라이징하기 위해 만든 Dockerfile입니다. 저는 해당 파일을 프로젝트 내 **build/libs** 경로에 만들어줬습니다. 이렇게 한 이유는 spring application을 띄우기 위해 bootjar 파일들이 필요한데 이를 얻기 위해 빌드하면 해당 경로에 생성되고, 도커 파일 내부에서 이러한 파일들을 COPY 하기 위해 접근할 때 도커 파일이 위치한 경로가 홈 디렉토리가 되기 때문에 편리하게 접근하기 위해서 위와 같은 경로에 Dockerfile을 생성하였습니다.   
+우선 Spring Boot application을 도커라이징하기 위해 만든 Dockerfile입니다. 저는 해당 파일을 프로젝트 내 **build/libs** 경로에 만들어줬습니다. 이렇게 한 이유는 Spring application을 띄우기 위해 bootjar 파일들이 필요한데 이를 얻기 위해 빌드하면 해당 경로에 생성되고, 도커 파일 내부에서 이러한 파일들을 COPY 하기 위해 접근할 때 도커 파일이 위치한 경로가 홈 디렉토리가 되기 때문에 편리하게 접근하기 위해서 위와 같은 경로에 Dockerfile을 생성하였습니다.   
 위 코드에서 중요한 내용을 설명드리자면 **ENV PROFILE dev**를 통해서 프로파일을 dev로 설정하였는데 이렇게 설정된 프로파일에 따라 application 설정 파일을 다르게 실행할 수 있습니다. 위처럼 저는 dev로 설정하였기 때문에 application-dev.yml 파일에 정의된 설정대로 애플리케이션이 실행되게 됩니다.
 
 ## docker-compose.yml
